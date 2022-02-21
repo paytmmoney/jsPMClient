@@ -8,20 +8,22 @@ const endpoints = require('./constants').endpoints
  * @name PMClient
  * @param {String} params.api_key
  * @param {String} params.api_secret
+ * @param {String} params.state_key
  * @param {String} [params.access_token=null] 
  */
 var PMClient  = function(params){
     this.api_key = params.api_key;
     this.api_secret = params.api_secret;
+    this.state_key = params.state_key;
     this.access_token = params.access_token;
     
     /**
      * Set the access token 
      * @param {String} token 
      */
-    this.set_access_token = function (token) {
-        this.access_token = token;
-        apiservice.access_token = token;
+    this.set_access_token = function (access_token) {
+        this.access_token = access_token;
+        apiservice.access_token = access_token;
         return this.access_token;
     }
 
@@ -29,14 +31,14 @@ var PMClient  = function(params){
      * Login URL to get the request token
      */
     this.get_login_URL = function () {
-        return endpoints['login'] + api_key;
+        return endpoints['login'] + api_key + endpoints['login_param'] + state_key;
     }
 
     /**
      * Generate session and get the access_token
      * @param {String} request_token 
      */
-    this.generate_session = function (request_token) {
+    this.generate_session = async function (request_token) {
         var order = {
             merchantSecret : api_secret
         }
@@ -44,13 +46,15 @@ var PMClient  = function(params){
             requestToken : request_token,
             apiKey : api_key,
         }
-        var token = apiservice.apiCall('access_token', 'POST', order, query_param)
+        var token = await apiservice.apiCall('access_token', 'POST', order, query_param)
+
+        const res = JSON.parse(token);
 
         if (token) {
-            this.set_access_token(token['data']);
+            this.set_access_token(res['data']);
         }
 
-        return token
+        return res['data'];
     }
 
     /**

@@ -19,6 +19,11 @@ this.apiCall = function(api,http_method,payload=null,params=null){
         body: request_body,
         method: http_method
     }
+
+    if (payload == null){
+        delete options["body"];
+    }
+
     options['headers']['x-jwt-token'] = this.access_token
     
     if (url == endpoints['host']+endpoints['security_master']){              //setting the Content-Type if data is in CSV form
