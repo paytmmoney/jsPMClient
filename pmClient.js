@@ -6,16 +6,28 @@ const endpoints = require('./constants').endpoints
  * 
  * @constructor
  * @name PMClient
- * @param {String} params.api_key
- * @param {String} params.api_secret
- * @param {String} params.state_key
- * @param {String} [params.access_token=null] 
+ * @param {String} api_key
+ * @param {String} api_secret
+ * @param {String} state_key
+ * @param {String} access_token 
  */
-var PMClient  = function(params){
-    this.api_key = params.api_key;
-    this.api_secret = params.api_secret;
-    this.state_key = params.state_key;
-    this.access_token = params.access_token;
+var PMClient  = function(api_key, api_secret, state_key, access_token=null){
+    if (api_key != null || undefined){
+        this.api_key = api_key;
+    } else {
+        throw Error("api_key cannot be null");
+    }
+    if (api_secret != null || undefined){
+        this.api_secret = api_secret;
+    } else {
+        throw Error("api_secret cannot be null");
+    }
+    if (state_key != null || undefined){
+        this.state_key = state_key;
+    } else {
+        throw Error("state_key cannot be null");
+    }
+    this.access_token = access_token;
     
     /**
      * Set the access token 
@@ -61,8 +73,7 @@ var PMClient  = function(params){
      * Logout the session
      */
     this.logout = function() {
-        this.set_access_token(this.access_token=null)
-        return apiservice.apiCall('logout','GET',null,null)
+        return apiservice.apiCall('logout','DELETE',null,null)
     }
 
     /**
