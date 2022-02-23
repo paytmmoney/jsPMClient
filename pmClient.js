@@ -8,10 +8,9 @@ const endpoints = require('./constants').endpoints
  * @name PMClient
  * @param {String} api_key
  * @param {String} api_secret
- * @param {String} state_key
  * @param {String} access_token 
  */
-var PMClient  = function(api_key, api_secret, state_key, access_token=null){
+var PMClient  = function(api_key, api_secret, access_token=null){
     if (api_key != null || undefined){
         this.api_key = api_key;
     } else {
@@ -22,16 +21,11 @@ var PMClient  = function(api_key, api_secret, state_key, access_token=null){
     } else {
         throw Error("api_secret cannot be null");
     }
-    if (state_key != null || undefined){
-        this.state_key = state_key;
-    } else {
-        throw Error("state_key cannot be null");
-    }
     this.access_token = access_token;
     
     /**
      * Set the access token 
-     * @param {String} token 
+     * @param {String} access_token 
      */
     this.set_access_token = function (access_token) {
         this.access_token = access_token;
@@ -41,9 +35,14 @@ var PMClient  = function(api_key, api_secret, state_key, access_token=null){
 
     /**
      * Login URL to get the request token
+     * @param {String} state_key
      */
-    this.get_login_URL = function () {
-        return endpoints['login'] + api_key + endpoints['login_param'] + state_key;
+    this.get_login_URL = function (state_key) {
+        if (state_key != null || undefined){
+            return endpoints['login'] + api_key + endpoints['login_param'] + state_key;
+        } else {
+            throw Error("state_key cannot be null");
+        }
     }
 
     /**
@@ -66,7 +65,7 @@ var PMClient  = function(api_key, api_secret, state_key, access_token=null){
             this.set_access_token(res['data']);
         }
 
-        return res['data'];
+        return token;
     }
 
     /**

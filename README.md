@@ -22,16 +22,17 @@ var PMClient = require('pmClient').PMClient;
 
 User needs to create an object of sdk and pass apiKey & apiSecretKey
 ```javascript
-// Initialize PMClient using apiKey, apiSecret & state_key.
-pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", state_key="your_state_key");
-// Initialize PMClient using apiKey, apiSecret, state_key & access_token if user has already generated.
-pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", state_key="your_state_key", access_token="your_access_token");
+// Initialize PMClient using apiKey, apiSecret.
+pm = PMClient(api_key="your_api_key", api_secret="your_api_secret");
+// Initialize PMClient using apiKey, apiSecret & access_token if user has already generated.
+pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", access_token="your_access_token");
 ```
 
 
 User needs to call the login method and get the login URL.
 ```javascript
-pm.get_login_URL();
+// Variable key which merchant/fintech company expects Paytm Money to return with Request Token. This can be string.
+pm.get_login_URL(state_key);
 ```
 
 1) User manually executes a login url in the browser and fetches requestToken after validating username, password, OTP and passcode.
