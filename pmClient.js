@@ -65,7 +65,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             this.set_access_token(res['data']);
         }
 
-        return token;
+        return res['data'];
     }
 
     /**
