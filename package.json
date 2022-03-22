@@ -16,5 +16,13 @@
   "devDependencies": {
     "jest": "^27.4.7"
   },
-  "description": "eq-openapi-sdk in nodejs"
+  "description": "eq-openapi-sdk in nodejs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paytmmoney/jsPMClient.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paytmmoney/jsPMClient/issues"
+  },
+  "homepage": "https://github.com/paytmmoney/jsPMClient#readme"
 }
