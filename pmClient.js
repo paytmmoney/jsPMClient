@@ -6,37 +6,50 @@ const endpoints = require('./constants').endpoints
  * 
  * @constructor
  * @name PMClient
- * @param {String} params.api_key
- * @param {String} params.api_secret
- * @param {String} [params.access_token=null] 
+ * @param {String} api_key
+ * @param {String} api_secret
+ * @param {String} access_token 
  */
-var PMClient  = function(params){
-    this.api_key = params.api_key;
-    this.api_secret = params.api_secret;
-    this.access_token = params.access_token;
+var PMClient  = function(api_key, api_secret, access_token=null){
+    if (api_key != null || undefined){
+        this.api_key = api_key;
+    } else {
+        throw Error("api_key cannot be null");
+    }
+    if (api_secret != null || undefined){
+        this.api_secret = api_secret;
+    } else {
+        throw Error("api_secret cannot be null");
+    }
+    this.access_token = access_token;
     
     /**
      * Set the access token 
-     * @param {String} token 
+     * @param {String} access_token 
      */
-    this.set_access_token = function (token) {
-        this.access_token = token;
-        apiservice.access_token = token;
+    this.set_access_token = function (access_token) {
+        this.access_token = access_token;
+        apiservice.access_token = access_token;
         return this.access_token;
     }
 
     /**
      * Login URL to get the request token
+     * @param {String} state_key
      */
-    this.get_login_URL = function () {
-        return endpoints['login'] + api_key;
+    this.get_login_URL = function (state_key) {
+        if (state_key != null || undefined){
+            return endpoints['login'] + api_key + endpoints['login_param'] + state_key;
+        } else {
+            throw Error("state_key cannot be null");
+        }
     }
 
     /**
      * Generate session and get the access_token
      * @param {String} request_token 
      */
-    this.generate_session = function (request_token) {
+    this.generate_session = async function (request_token) {
         var order = {
             merchantSecret : api_secret
         }
@@ -44,21 +57,22 @@ var PMClient  = function(params){
             requestToken : request_token,
             apiKey : api_key,
         }
-        var token = apiservice.apiCall('access_token', 'POST', order, query_param)
+        var token = await apiservice.apiCall('access_token', 'POST', order, query_param)
+
+        const res = JSON.parse(token);
 
         if (token) {
-            this.set_access_token(token['data']);
+            this.set_access_token(res['data']);
         }
 
-        return token
+        return res['data'];
     }
 
     /**
      * Logout the session
      */
     this.logout = function() {
-        this.set_access_token(this.access_token=null)
-        return apiservice.apiCall('logout','GET',null,null)
+        return apiservice.apiCall('logout','DELETE',null,null)
     }
 
     /**

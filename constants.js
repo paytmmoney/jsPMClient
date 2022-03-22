@@ -1,7 +1,8 @@
 const endpoints = {
-    'host' : 'https://developer-stg.paytmmoney.com',
+    'host' : 'https://developer.paytmmoney.com',
+    'login_param' : '&state=',
 
-    'login' : 'https://login-stg.paytmmoney.com/merchant-login?returnUrl=https://www.google.com/&apiKey=',
+    'login' : 'https://login.paytmmoney.com/merchant-login?apiKey=',
     'logout' : '/accounts/v1/logout',
     'user_details' : '/accounts/v1/user/details',
     'access_token' : '/accounts/v1/gettoken',

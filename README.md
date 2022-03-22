@@ -1,154 +1,249 @@
-#eq-openapi-sdk
+# The Paytm Money Equity 1.0 API NodeJS client
 
-eq-openapi-sdk in nodejs
+The official NodeJS client for communicating with [PaytmMoney Equity API](https://www.paytmmoney.com/stocks/).
 
-#Description
-PMClient is a bunch of REST-APIs that can be used to build a fully functional investment and trading platform.
-Real time execution of orders with simple HTTP API Collection.
+PMClient is a set of REST-like APIs that expose many capabilities required to build a complete investment and
+trading platform. Execute orders in real time, manage user portfolio, and more, with the simple HTTP API collection.
 
-#Install the Package
-npm install pmClient
+[PaytmMoney Technology Pvt Ltd](https://www.paytmmoney.com/) (c) 2021. Licensed under the MIT License.
 
-#API Usage
 
-var var_name = require('pmClient').PMClient
+## Documentation
 
-#####User needs to create an object of sdk and pass apiKey & apiSecretKey
-pm = PMClient(api_key="your_api_key", api_secret="your_api_secret")
+## Usage
+```javascript
+npm install pmClient;
+```
 
-#####User can call the login method and get the login URL.
-pm.get_login_URL()
+## API Usage
+```javascript
+var PMClient = require('pmClient').PMClient;
+```
 
-#####User manually executes a login url in the browser and fetches requestToken after validating username, password, OTP and passcode.
-#####After a successful login user will be provided the request_token in the URL
+User needs to create an object of sdk and pass apiKey & apiSecretKey
+```javascript
+// Initialize PMClient using apiKey, apiSecret.
+pm = PMClient(api_key="your_api_key", api_secret="your_api_secret");
+// Initialize PMClient using apiKey, apiSecret & access_token if user has already generated.
+pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", access_token="your_access_token");
+```
 
-#####Once the request_token is obtained you can generate access_token by calling generate_session
-pm.generate_session(request_token="2f0fe2ac3ccd40b2913094ce31eac50b")
+
+User needs to call the login method and get the login URL.
+```javascript
+// Variable key which merchant/fintech company expects Paytm Money to return with Request Token. This can be string.
+pm.get_login_URL(state_key);
+```
+
+1) User manually executes a login url in the browser and fetches requestToken after validating username, password, OTP and passcode.
+2) After a successful login user will be provided the request_token in the URL
+3) Once the request_token is obtained you can generate access_token by calling generate_session
+```javascript
+pm.generate_session(request_token="your_request_token")
 .then(function(response){
     console.log(response)
 })
 .catch(function(err){
     console.log(err);
 });
+```
 
+* Every Api returns a promise. Hence, then and catch must be used, as shown in generate_session api
 
-/*
-    Every Api returns a promise. Hence, then and catch must be used after every api method call as shown in generate_session api 
+```javascript
     .then(function(response){
         console.log(response)
     })
     .catch(function(err){
         console.log(err);
-    })
-*/
+    });
+```
 
-#####After generating the access_token it will get set and any API can be called with same access_token.
+After generating the access_token/session any API can be called with same access_token/session.
+```javascript
+// Set access Token if you have already. In this case, Don't need to call generateSession method.
+pm.set_access_token(access_token);
+```
 
-#Place Order
-#####Here you can place regular, cover and bracket order
-#####For cover order in argument user has to add trigger_price
-#####For bracket order in argument user has to add stoploss_value & profit_value
-order = pm.place_order(txn_type, exchange, segment, product, security_id, quantity, validity, order_type, price, source,
-off_mkt_flag)
+### Place Order
+* Here you can place regular, cover and bracket order.
+* For cover order in argument user has to add trigger_price.
+* For bracket order in argument user has to add stoploss_value & profit_value.
+* To place sell CNC order user has to add edis_txn_id and edis_auth_mode.
+* If order_type is StopLossMarket(SLM) or StopLoss(SL) trigger price should not be null.
 
-#Modify Order
-####Here you can modify orders
-####For cover order in argument user has to add leg_no
-#####For bracket order in argument user has to add leg_no & algo_order_no
-order = pm.modify_order(source, txn_type, exchange, segment, product, security_id, quantity, validity, order_type,
-price, mkt_type, order_no, serial_no, group_id)
+```javascript
+// Regular Order
+order = pm.place_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type, price,
+off_mkt_flag);
+```
+```javascript
+// Cover Order
+order = pm.place_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type, price,
+off_mkt_flag, null, null, trigger_price);
+```
+```javascript
+// Bracket Order
+order = pm.place_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type, price,
+off_mkt_flag, profit_value, stoploss_value);
+```
+```javascript
+// Sell CNC Order
+order = pm.place_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type, price,
+off_mkt_flag, null, null, null, edis_txn_id, edis_auth_mode);
+```
 
-#Cancel Order
-####Here you can Cancel Orders
-####For cover order in argument user has to add leg_no
-#####For bracket order in argument user has to add leg_no & algo_order_no
-order = pm.cancel_order(source, txn_type, exchange, segment, product, security_id, quantity, validity, order_type,
-price, mkt_type, order_no, serial_no, group_id)
+### Modify Order
+* Here you can modify orders.
+* For cover order in argument user has to add leg_no.
+* For bracket order in argument user has to add leg_no & algo_order_no.
+* To modify sell CNC order user has to add edis_txn_id and edis_auth_mode.
+* If order_type is StopLossMarket(SLM) or StopLoss(SL) trigger price should not be null.
+```javascript
+// Regular Order
+order = pm.modify_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id);
+```
+```javascript
+// Cover Order
+order = pm.modify_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id, null, leg_no);
+```
+```javascript
+// Bracket Order
+order = pm.modify_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id, null, leg_no, algo_order_no);
+```
+```javascript
+// Sell CNC Order
+order = pm.modify_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id, null, null, null, edis_txn_id, edis_auth_mode);
+```
+
+### Cancel Order
+* Here you can Cancel Orders
+* For cover order in argument user has to add leg_no
+* For bracket order in argument user has to add leg_no & algo_order_no
+* If order_type is StopLossMarket(SLM) or StopLoss(SL) trigger price should not be null.
+```javascript
+// Regular Order
+order = pm.cancel_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id);
+```
+```javascript
+// Cover Order
+order = pm.cancel_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id, null, leg_no);
+```
+```javascript
+// Bracket Order
+order = pm.cancel_order(txn_type, source, exchange, segment, product, security_id, quantity, validity, order_type,
+price, off_mkt_flag, mkt_type, order_no, serial_no, group_id, null, leg_no, algo_order_no);
+```
 
 
-#Convert Order
-####For converting through eDIS user needs to provide edis_txn_id & edis_auth_mode
-####The above details can be generated by TPIN APIs
-order = pm.convert_regular(source, txn_type, exchange, mkt_type, segment, product_from, product_to, quantity,
-security_id)
+### Convert Order
+* For converting through eDIS user needs to provide edis_txn_id & edis_auth_mode.
+* The above details can be generated by TPIN APIs.
+```javascript
+// Regular Order
+order = pm.convert_order(source, txn_type, exchange, segment, mkt_type, product_from, product_to, quantity,
+security_id);
+```
+```javascript
+// Sell CNC Order
+order = pm.convert_order(source, txn_type, exchange, segment, mkt_type, product_from, product_to, quantity,
+security_id, edis_txn_id, edis_auth_mode);
+```
 
-#Order Details
-####Fetch details of all the order
-pm.order_book()
+### Order Details
+* Fetch details of all the order
+```javascript
+pm.order_book();
+```
 
-#Trade Details
-#####Fetch Trade Details
-pm.trade_details(order_no, leg_no, segment)
 
-#Position
-####Get all the positions
-pm.position()
+### Trade Details
+* Fetch Trade Details
+```javascript
+pm.trade_details(order_no, leg_no, segment);
+```
 
-#Position Details
-####Get position detail of specific stock
-pm.position_details(security_id, product, exchange)
+### Position
+* Get all the positions
+```javascript
+pm.position();
+```
 
-#Get Funds History
-####Get the funds history
-pm.funds_summary(config=True)
+### Position Details
+* Get position detail of specific stock
+```javascript
+pm.position_details(security_id, product, exchange);
+```
 
-#Scrip Margin
-####Calculate Scrip Margin
-pm.scrip_margin(
-source="N"
-margin_list=[
-{
-"exchange":"NSE",
-"segment":"D",
-"security_id":"46840",
-"txn_type":"B",
-"quantity":"250",
-"strike_price":"0",
-"trigger_price":"0",
-"instrument":"FUTSTK"
-},
-{
-"exchange":"",
-"segment":"",
-"security_id":"",
-"txn_type":"",
-"quantity":"",
-"strike_price":"",
-"trigger_price":"",
-"instrument":""
-}...
-]
-)
+### Get Funds History
+* Get the funds history
+```javascript
+pm.funds_summary(config);
+```
 
-#Order Margin
-####Calculate Order Margin
-pm.order_margin(source, exchange, segment, security_id, txn_type, quantity, price, product, trigger_price)
+### Scrip Margin
+* Calculate Scrip Margin
+```javascript
+pm.scrip_margin(source,margin_list=[]);
+```
 
-#Holdings value
-####Get value of the holdings
-pm.holdings_value()
+### Order Margin
+* Calculate Order Margin
+```javascript
+pm.order_margin(source, exchange, segment, security_id, txn_type, quantity, price, product, trigger_price);
+```
 
-#User Holdings Data
-####Get holdings data of User
-####isin will be provided in order details
-pm.user_holdings_data(isin)
+### Holdings value
+* Get value of the holdings
+```javascript
+pm.holdings_value();
+```
 
-#Security Master
-####Data will be provided in CSV format
-pm.security_master()
+### User Holdings Data
+* Get holdings data of User
+```javascript
+pm.user_holdings_data();
+```
 
-#User Details
-####Fetch user details
-pm.get_user_details()
+### Security Master
+* Data will be provided in CSV format
+```javascript
+pm.security_master();
+```
 
-#Generate Tpin
-pm.generate_tpin()
+### User Details
+* Fetch user details
+```javascript
+pm.get_user_details();
+```
 
-#Validate Tpin
-pm.validate_tpin(exchange, segment, security_id, quantity)
+### Generate Tpin
+```javascript
+pm.generate_tpin();
+```
 
-#Status
-####user can get the edis_request_id from the response of validate TPIN API
-pm.status(edis_request_id)
+### Validate Tpin
+```javascript
+pm.validate_tpin(trade_type, isin_list=[]);
+```
+
+
+### Status
+* User can get the edis_request_id from the response of validate TPIN API.
+```javascript
+pm.status(edis_request_id);
+```
+
+### Logout
+* To end session.
+```javascript
+pm.logout();
+```
 
 
