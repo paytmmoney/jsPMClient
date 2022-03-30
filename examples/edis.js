@@ -26,11 +26,11 @@ connect.validate_tpin(
     trade_type ="PRE",
     isin_list=[  
         {
-            "isin": "INE405Y01013",
+            "isin": "isin",
             "qty": 2
         },
         {
-            "isin": "INE421A01028",
+            "isin": "isin",
             "qty": 3
         }
     ]
