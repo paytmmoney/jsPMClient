@@ -57,11 +57,11 @@ describe("PMClient", () => {
     test("login_url_test", () => {
         expect(
             connect.get_login_URL()
-        ).toBe("https://login-stg.paytmmoney.com/merchant-login?returnUrl=https://www.google.com/&apiKey=0566e4a0b2724ccea06f30a7a19d1987")
+        ).toBe("https://login-stg.paytmmoney.com/merchant-login?returnUrl=https://www.google.com/&apiKey=api_key")
     })
 
     test("place_order_attribute_test", () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NDI3MDMzNDAwMDAiLCJzc29Ub2tlbiI6IjU1YmM3MmIwLWJhY2EtNDFjNS1hMjE2LTYzNDBiYzc3MDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.8DELYNXqpKKvFRwwoou87A-g3yMp6FHFkM2eGGgA6XI");
+        connect.set_access_token("valid_token");
         const order = connect.place_order(        
         source="W",
         txn_type="B",
@@ -136,7 +136,7 @@ describe("PMClient", () => {
     });
 
     test("place_order_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.place_order(        
             source="W",
             txn_type="B",
@@ -167,7 +167,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=1,
             group_id=8 )
         expect(order).toThrow(error.ConnectionError)
@@ -188,7 +188,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=1,
             group_id=8,
             leg_no="2",
@@ -212,7 +212,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=1,
             group_id=8,
             leg_no="2"
@@ -221,7 +221,7 @@ describe("PMClient", () => {
     });
 
     test("modify_order_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.modify_order(
             source="N",
             txn_type="B",
@@ -235,7 +235,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=False,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=1,
             group_id=8)
         expect(order).toThrow(error.AttributeError)
@@ -256,7 +256,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=2,
             group_id=8)
         expect(order).toThrow(error.ConnectionError)
@@ -277,7 +277,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=2,
             group_id=8,
             leg_no="2"
@@ -300,7 +300,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=2,
             group_id=8,
             leg_no="2",
@@ -310,7 +310,7 @@ describe("PMClient", () => {
     });
 
     test("cancel_order_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.cancel_order(
             source="N",
             txn_type="B",
@@ -324,7 +324,7 @@ describe("PMClient", () => {
             price=620.0,
             off_mkt_flag=False,
             mkt_type="NL",
-            order_no="812112062073",
+            order_no="order_no",
             serial_no=2,
             group_id=8)
         expect(order).toThrow(error.AttributeError)
@@ -351,7 +351,7 @@ describe("PMClient", () => {
     test("trade_details_connection_test",  () => {
         connect.set_access_token("invalid_token");
         const order = connect.trade_details(
-            order_no="152180177216",
+            order_no="order_no",
             leg_no="1",
             segment="E"
         )
@@ -377,7 +377,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("funds_summary_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.funds_summary()
         expect(order).toThrow(error.AttributeError)
     });
@@ -436,7 +436,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("scrips_margin_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.scrips_margin(
             source="N",
             margin_list=[
@@ -483,7 +483,7 @@ describe("PMClient", () => {
     test("user_holdings_data_connection_test",  () => {
         connect.set_access_token("invalid_token");
         const order = connect.user_holdings_data(
-            isin="INE114A01011"
+            isin="isin"
         )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -498,7 +498,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("generate_tpin_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.generate_tpin()
         expect(order).toThrow(error.AttributeError)
     });
@@ -512,7 +512,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("validate_tpin_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.validate_tpin(
             exchange="NSE",
             segment="E",
@@ -526,7 +526,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("status_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.status(edis_request_id=10131)
         expect(order).toThrow(error.AttributeError)
     });
@@ -536,7 +536,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("user_details_attribute_test",  () => {
-        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2MzkwMzE4ODIzMTciLCJzc29Ub2tlbiI6ImY4ZDk3ZGMzLTYwMTctNDFmNC1hYmRkLWVkNmQzODRhMDAwMCIsInVzZXJJZCI6IjExNTA0NDQyNzAiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.GmPhLzxjbG6MmiKJcBhbLWz2Qx5yBavQ2fkI9UNTuNc");
+        connect.set_access_token("valid_token");
         const order = connect.get_user_details()
         expect(order).toThrow(error.AttributeError)
     });
