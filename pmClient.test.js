@@ -3,7 +3,7 @@ var error = require('./exception');
 var message = require('./constants').error_message;
 
 describe("PMClient", () => {
-    var connect = new PMClient(api_key="0566e4a0b2724ccea06f30a7a19d1987",api_secret="3d3cf2eae1f6405ea932c51d947e1a52")
+    var connect = new PMClient(api_key="api_key",api_secret="api_secret")
 
     test("error_test_1", () => {
         expect(
