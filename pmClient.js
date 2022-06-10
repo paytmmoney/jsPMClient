@@ -432,9 +432,15 @@ var PMClient  = function(api_key, api_secret, access_token=null){
 
     /**
      * Security Master
+     * @param {String} scrip_type
+     * @param {String} exchange
      */
-    this.security_master = function(){
-        return apiservice.apiCall('security_master','GET',null,null)
+    this.security_master = function(scrip_type=null, exchange=null){
+        var params = {
+            'scrip_type': scrip_type, 
+            'exchange': exchange
+        }
+        return apiservice.apiCall('security_master','GET',null,params)
     }
 
     /**
@@ -466,6 +472,27 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'edis_request_id':edis_request_id
         }
         return apiservice.apiCall('status','GET',null,params)
+    }
+
+    /**
+     * Historical data
+     * @
+     */
+    this.price_chart_sym = function(cont, exchange, expiry, from_date, inst_type, interval, symbol, to_date, month_id=null, series=null, strike=null){
+        var order = {
+            'cont': cont,
+            'exchange': exchange,
+            'expiry': expiry,
+            'fromDate': from_date,
+            'instType': inst_type,
+            'interval': interval,
+            'monthId': month_id,
+            'series': series,
+            'strike': strike,
+            'symbol': symbol,
+            'toDate': to_date
+        }
+        return apiservice.apiCall('price_chart_sym','POST',order,null)
     }
 }
 

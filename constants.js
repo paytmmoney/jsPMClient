@@ -34,7 +34,9 @@ const endpoints = {
 
     'generate_tpin': '/edis/v1/generate/tpin',
     'validate_tpin': '/edis/v1/validate/tpin',
-    'status': '/edis/v1/status'
+    'status': '/edis/v1/status',
+
+    'price_chart_sym': '/data/v1/price-charts/sym'
 
 }
 

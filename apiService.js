@@ -26,7 +26,7 @@ this.apiCall = function(api,http_method,payload=null,params=null){
 
     options['headers']['x-jwt-token'] = this.access_token
     
-    if (url == endpoints['host']+endpoints['security_master']){              //setting the Content-Type if data is in CSV form
+    if (url.includes('security_master')){                                     //setting the Content-Type if data is in CSV form
         options['headers']['Content-Type'] = 'application/vnd.ms-excel';   
     }
 
