@@ -494,6 +494,153 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         }
         return apiservice.apiCall('price_chart_sym','POST',order,null)
     }
+
+    /**
+     * Get GTT by status or pml_id
+     * @param {String} status
+     * @param {String} pml_id
+     */
+     this.get_gtt_by_status_or_pml_id = function(status=null,pml_id=null){
+        var params = {
+            'status': status,
+            'pml_id': pml_id
+        }
+        return apiservice.apiCall('get_gtt_by_pml_id_and_status','GET',null,params)
+    }
+
+    /**
+     * Create GTT order
+     * @param {String} segment
+     * @param {String} exchange
+     * @param {String} pml_id
+     * @param {String} security_id
+     * @param {String} product_type
+     * @param {String} set_price
+     * @param {String} transaction_type
+     * @param {String} order_type
+     * @param {String} trigger_type
+     * @param {String} quantity
+     * @param {String} trigger_price
+     * @param {String} limit_price
+     * @param {String} execution_ref_id
+     * @param {String} notification_ref_id
+     * @param {String} sub_type
+     * @param {String} triggered_at
+     * @param {String} triggered_at_price
+     * @param {String} triggered_at_type
+     */
+     this.create_gtt = function(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price, execution_ref_id=null, 
+        notification_ref_id=null, sub_type=null, triggered_at=null, triggered_at_price=null, triggered_at_type=null){
+        var transaction_details = []
+
+        var transaction_details_obj = {
+            'quantity': quantity,
+            'trigger_price': trigger_price,
+            'limit_price': limit_price,
+            'execution_ref_id': execution_ref_id,
+            'notification_ref_id': notification_ref_id,
+            'sub_type': sub_type,
+            'triggered_at': triggered_at,
+            'triggered_at_price': triggered_at_price,
+            'triggered_at_type': triggered_at_type
+        }
+        transaction_details.append(transaction_details_obj)
+
+        var order = {
+            'segment': segment,
+            'exchange': exchange,
+            'pml_id': pml_id,
+            'security_id': security_id,
+            'product_type': product_type,
+            'set_price': set_price,
+            'transaction_type': transaction_type,
+            'order_type': order_type,
+            'trigger_type': trigger_type,
+            'transaction_details': transaction_details
+        }
+        return apiservice.apiCall('gtt','POST',order,null)
+    }
+
+    /**
+     * Get GTT 
+     * @param {String} id
+     */
+     this.get_gtt = function(id){
+        var params = {
+            'id' : id
+        }
+        return apiservice.apiCall('gtt_by_id','GET',null,params)
+    }
+
+    /**
+     * Update GTT order
+     * @param {String} set_price
+     * @param {String} transaction_type
+     * @param {String} order_type
+     * @param {String} trigger_type
+     * @param {String} quantity
+     * @param {String} trigger_price
+     * @param {String} limit_price
+     */
+     this.update_gtt = function(set_price=null, transaction_type=null, order_type=null, trigger_type=null, quantity=null, trigger_price=null, limit_price=null){
+        var transaction_details = []
+
+        var transaction_details_obj = {
+            'quantity': quantity,
+            'trigger_price': trigger_price,
+            'limit_price': limit_price
+        }
+        transaction_details.append(transaction_details_obj)
+
+        var order = {
+            'set_price': set_price,
+            'transaction_type': transaction_type,
+            'order_type': order_type,
+            'trigger_type': trigger_type,
+            'transaction_details': transaction_details
+        }
+        return apiservice.apiCall('gtt_by_id','PUT',order,null)
+    }
+
+    /**
+     * Delete GTT order
+     * @param {String} id
+     */
+     this.delete_gtt = function(id){
+        var params = {
+            'id' : id
+        }
+        return apiservice.apiCall('gtt_by_id','DELETE',null,params)
+    }
+
+    /**
+     * GET GTT Aggregate
+     */
+    this.get_gtt_aggregate = function(){
+        return apiservice.apiCall('gtt_aggregate','GET',null,null)
+    }
+
+    /**
+     * Get GTT expiry date by pml_id
+     * @param {String} id
+     */
+     this.get_gtt_expiry = function(pml_id){
+        var params = {
+            'pml_id' : pml_id
+        }
+        return apiservice.apiCall('expiry_gtt','GET',null,params)
+    }   
+
+    /**
+     * Get GTT order by Instruction id
+     * @param {String} id
+     */
+     this.delete_gtt = function(id){
+        var params = {
+            'id' : id
+        }
+        return apiservice.apiCall('gtt_by_instruction_id','GET',null,params)
+    }
 }
 
 //exporting PMClient
