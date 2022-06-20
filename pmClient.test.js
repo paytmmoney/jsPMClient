@@ -540,4 +540,95 @@ describe("PMClient", () => {
         const order = connect.get_user_details()
         expect(order).toThrow(error.AttributeError)
     });
+    test("create_gtt_connection_test", () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.create_gtt(        
+            segment="E",
+            exchange="NSE",
+            pml_id="1000001488",
+            security_id="14366",
+            product_type="C",
+            set_price=12.80,
+            transaction_type="S",
+            quantity=1,
+            trigger_price=12.7,
+            limit_price=0,
+            order_type="MKT",
+            trigger_type="SINGLE")
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("create_gtt_attribute_test", () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.create_gtt(        
+            segment="E",
+            exchange="NSE",
+            pml_id="1000001488",
+            security_id="14366",
+            product_type=6,
+            set_price=12.80,
+            transaction_type="S",
+            quantity=1,
+            trigger_price=12.7,
+            limit_price=0,
+            order_type="MKT",
+            trigger_type="SINGLE")
+        expect(order).toThrow(error.AttributeError)
+    });
+    test("get_gtt_by_id_or_status_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const order = connect.get_gtt_by_status_or_pml_id(
+            status="ACTIVE",
+            pml_id="1000001488"
+        )
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const order = connect.get_gtt(id=2563)
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("delete_gtt_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const order = connect.get_gtt(id=2563)
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("update_gtt_attribute_test", () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.update_gtt(        
+            set_price=12.80,
+            transaction_type=5,
+            quantity=3,
+            trigger_price=12.7,
+            limit_price=0,
+            order_type="MKT",
+            trigger_type="SINGLE")
+        expect(order).toThrow(error.AttributeError)
+    });
+    test("update_gtt_connection_test", () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.update_gtt(        
+            set_price=12.80,
+            transaction_type="S",
+            quantity=3,
+            trigger_price=12.7,
+            limit_price=0,
+            order_type="MKT",
+            trigger_type="SINGLE")
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_aggregate_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const order = connect.get_gtt_aggregate()
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_expiry_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const order = connect.get_gtt_expiry(pml_id="1000001488")
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_by_instruction_id_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const order = connect.get_gtt_by_instruction_id(id=2563)
+        expect(order).toThrow(error.ConnectionError)
+    });
 });

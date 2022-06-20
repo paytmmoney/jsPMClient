@@ -635,7 +635,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * Get GTT order by Instruction id
      * @param {String} id
      */
-     this.delete_gtt = function(id){
+     this.get_gtt_by_instruction_id = function(id){
         var params = {
             'id' : id
         }
