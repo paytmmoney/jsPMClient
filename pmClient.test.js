@@ -540,6 +540,32 @@ describe("PMClient", () => {
         const order = connect.get_user_details()
         expect(order).toThrow(error.AttributeError)
     });
+    test("price_chart_sym_connection_test", () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.price_chart_sym(        
+            cont="false",
+            exchange="NSE",
+            expiry="2022-04-26",
+            fromDate="2022-02-10",
+            instType="FUTIDX",
+            interval="MINUTE",
+            symbol="MIDCPNIFTY",
+            toDate="2022-02-05")
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("price_chart_sym_attribute_test", () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.price_chart_sym(        
+            cont="false",
+            exchange="NSE",
+            expiry="2022-04-26",
+            fromDate="2022-02-10",
+            instType="FUTIDX",
+            interval="MINUTE",
+            symbol="",
+            toDate="2022-02-05")
+        expect(order).toThrow(error.AttributeError)
+    });
     test("create_gtt_connection_test", () => {
         connect.set_access_token("invalid_token");
         const order = connect.create_gtt(        
@@ -594,7 +620,8 @@ describe("PMClient", () => {
     });
     test("update_gtt_attribute_test", () => {
         connect.set_access_token("invalid_token");
-        const order = connect.update_gtt(        
+        const order = connect.update_gtt(    
+            id=89,    
             set_price=12.80,
             transaction_type=5,
             quantity=3,
@@ -606,7 +633,8 @@ describe("PMClient", () => {
     });
     test("update_gtt_connection_test", () => {
         connect.set_access_token("invalid_token");
-        const order = connect.update_gtt(        
+        const order = connect.update_gtt(   
+            id=89,   
             set_price=12.80,
             transaction_type="S",
             quantity=3,

@@ -4,21 +4,28 @@ const endpoints = require('./constants').endpoints;
 const exception = require('./exception');
 
 
-this.apiCall = function(api,http_method,payload=null,params=null){
+this.apiCall = function(api,http_method,payload=null,params=null,path_param=null){
     var request_body = JSON.stringify(payload);               //converts the arguments to JSON form
     var query_param = querystring.stringify(params);          //converts the arguments to query_param
+    var url = endpoints['host']+endpoints[api];
+    if (path_param != null) {
+        for(var key in path_param) {
+            url = url.replace("{"+key+"}", path_param[key])
+        }
+    }
+    
     if (params != null){
-        var url = endpoints['host']+endpoints[api]+'?'+query_param;   
+        url = url+'?'+query_param;   
     }
-    else{
-        var url = endpoints['host']+endpoints[api];
-    }
+
     var options = {
         headers: {'Content-Type' : 'application/json'},
         url: url,
         body: request_body,
         method: http_method
     }
+
+    console.log(options);
 
     if (payload == null){
         delete options["body"];

@@ -57,7 +57,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             requestToken : request_token,
             apiKey : api_key,
         }
-        var token = await apiservice.apiCall('access_token', 'POST', order, query_param)
+        var token = await apiservice.apiCall('access_token', 'POST', order, query_param, null)
 
         const res = JSON.parse(token);
 
@@ -72,14 +72,14 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * Logout the session
      */
     this.logout = function() {
-        return apiservice.apiCall('logout','DELETE',null,null)
+        return apiservice.apiCall('logout','DELETE',null,null,null)
     }
 
     /**
      * Fetch User Details
      */
     this.get_user_details = function() {
-        return apiservice.apiCall('user_details','GET',null,null)
+        return apiservice.apiCall('user_details','GET',null,null,null)
     }
 
     // Orders
@@ -144,7 +144,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             delete order.off_mkt_flag;
             order['trigger_price'] = trigger_price;
         }
-        return apiservice.apiCall(helper, 'POST', order, null);
+        return apiservice.apiCall(helper, 'POST', order, null, null);
     }
 
     /**
@@ -214,7 +214,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             helper = 'modify_cover';
             order['leg_no'] = leg_no;
         }
-        return apiservice.apiCall(helper,'POST',order,null);
+        return apiservice.apiCall(helper,'POST',order,null, null);
     }
 
     /**
@@ -276,7 +276,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             helper = 'exit_cover';
             order['leg_no'] = leg_no;
         }
-        return apiservice.apiCall(helper,'POST',order,null)
+        return apiservice.apiCall(helper,'POST',order,null,null)
     }
 
     /**
@@ -312,7 +312,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             order['edis_txn_id'] = edis_txn_id;
             order['edis_auth_mode'] = edis_auth_mode;
         }
-        return apiservice.apiCall('convert_regular','POST',order,null)
+        return apiservice.apiCall('convert_regular','POST',order,null,null)
     }
 
     // Order & Trade Book
@@ -320,7 +320,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * Order Book
      */
     this.order_book = function(){
-        return apiservice.apiCall('order_book', 'GET', null, null)
+        return apiservice.apiCall('order_book', 'GET', null, null,null)
     }
 
     /**
@@ -335,14 +335,14 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'leg_no':leg_no,
             'segment':segment
         }
-        return apiservice.apiCall('trade_details', 'GET', null, params)
+        return apiservice.apiCall('trade_details', 'GET', null, params,null)
     }
 
     /**
      * Positions
      */
     this.position = function(){
-        return apiservice.apiCall('position','GET', null, null)
+        return apiservice.apiCall('position','GET', null, null,null)
     }
 
     /**
@@ -357,7 +357,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'product':product,
             'exchange':exchange
         }
-        return apiservice.apiCall('position_details', 'GET', null, params)
+        return apiservice.apiCall('position_details', 'GET', null, params, null)
     }
 
     /**
@@ -368,21 +368,21 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         var params = {
             'config' : config
         }
-        return apiservice.apiCall('funds_summary','GET',null,params)
+        return apiservice.apiCall('funds_summary','GET',null,params,null)
     }
 
     /**
      * Holdings Value
      */
     this.holdings_value = function(){
-        return apiservice.apiCall('holdings_value','GET',null,null)
+        return apiservice.apiCall('holdings_value','GET',null,null,null)
     }
 
     /**
      * User Holdings Data
      */
     this.user_holdings_data = function(){
-        return apiservice.apiCall('user_holdings_data','GET',null,null)
+        return apiservice.apiCall('user_holdings_data','GET',null,null,null)
     }
 
     // Margins
@@ -410,7 +410,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'product':product,
             'trigger_price':trigger_price
         }
-        return apiservice.apiCall('order_margin','GET',null,params)
+        return apiservice.apiCall('order_margin','GET',null,params,null)
     }
 
     /**
@@ -427,7 +427,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'source':source,
             'margin_list':margin_list
         }
-        return apiservice.apiCall('scrips_margin','POST',order,null)
+        return apiservice.apiCall('scrips_margin','POST',order,null,null)
     }
 
     /**
@@ -440,14 +440,14 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'scrip_type': scrip_type, 
             'exchange': exchange
         }
-        return apiservice.apiCall('security_master','GET',null,params)
+        return apiservice.apiCall('security_master','GET',null,params,null)
     }
 
     /**
      * Generate TPIN for CDSL
      */
     this.generate_tpin = function(){
-        return apiservice.apiCall('generate_tpin','GET',null,null)
+        return apiservice.apiCall('generate_tpin','GET',null,null,null)
     }
 
     /**
@@ -460,7 +460,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'trade_type':trade_type,
             'isin_list':isin_list
         }
-        return apiservice.apiCall('validate_tpin','POST',order,null)
+        return apiservice.apiCall('validate_tpin','POST',order,null,null)
     }
 
     /**
@@ -471,7 +471,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         var params = {
             'edis_request_id':edis_request_id
         }
-        return apiservice.apiCall('status','GET',null,params)
+        return apiservice.apiCall('status','GET',null,params,null)
     }
 
     /**
@@ -492,7 +492,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'symbol': symbol,
             'toDate': to_date
         }
-        return apiservice.apiCall('price_chart_sym','POST',order,null)
+        return apiservice.apiCall('price_chart_sym','POST',order,null,null)
     }
 
     /**
@@ -503,9 +503,9 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      this.get_gtt_by_status_or_pml_id = function(status=null,pml_id=null){
         var params = {
             'status': status,
-            'pml_id': pml_id
+            'pml-id': pml_id
         }
-        return apiservice.apiCall('get_gtt_by_pml_id_and_status','GET',null,params)
+        return apiservice.apiCall('gtt','GET',null,params,null)
     }
 
     /**
@@ -544,7 +544,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'triggered_at_price': triggered_at_price,
             'triggered_at_type': triggered_at_type
         }
-        transaction_details.append(transaction_details_obj)
+        transaction_details.push(transaction_details_obj)
 
         var order = {
             'segment': segment,
@@ -558,7 +558,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
-        return apiservice.apiCall('gtt','POST',order,null)
+        return apiservice.apiCall('gtt','POST',order,null,null)
     }
 
     /**
@@ -566,10 +566,10 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} id
      */
      this.get_gtt = function(id){
-        var params = {
+        var path_params = {
             'id' : id
         }
-        return apiservice.apiCall('gtt_by_id','GET',null,params)
+        return apiservice.apiCall('gtt_by_id','GET',null,null,path_params)
     }
 
     /**
@@ -582,7 +582,11 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} trigger_price
      * @param {String} limit_price
      */
-     this.update_gtt = function(set_price=null, transaction_type=null, order_type=null, trigger_type=null, quantity=null, trigger_price=null, limit_price=null){
+     this.update_gtt = function(id,set_price=null, transaction_type=null, order_type=null, trigger_type=null, quantity=null, trigger_price=null, limit_price=null){
+        var path_params = {
+            'id' : id
+        }
+        
         var transaction_details = []
 
         var transaction_details_obj = {
@@ -590,7 +594,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'trigger_price': trigger_price,
             'limit_price': limit_price
         }
-        transaction_details.append(transaction_details_obj)
+        transaction_details.push(transaction_details_obj)
 
         var order = {
             'set_price': set_price,
@@ -599,7 +603,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
-        return apiservice.apiCall('gtt_by_id','PUT',order,null)
+        return apiservice.apiCall('gtt_by_id','PUT',order,null,path_params)
     }
 
     /**
@@ -607,17 +611,17 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} id
      */
      this.delete_gtt = function(id){
-        var params = {
+        var path_params = {
             'id' : id
         }
-        return apiservice.apiCall('gtt_by_id','DELETE',null,params)
+        return apiservice.apiCall('gtt_by_id','DELETE',null,null,path_params)
     }
 
     /**
      * GET GTT Aggregate
      */
     this.get_gtt_aggregate = function(){
-        return apiservice.apiCall('gtt_aggregate','GET',null,null)
+        return apiservice.apiCall('gtt_aggregate','GET',null,null,null)
     }
 
     /**
@@ -626,9 +630,9 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      */
      this.get_gtt_expiry = function(pml_id){
         var params = {
-            'pml_id' : pml_id
+            'pml-id' : pml_id
         }
-        return apiservice.apiCall('expiry_gtt','GET',null,params)
+        return apiservice.apiCall('expiry_gtt','GET',null,params,null)
     }   
 
     /**
@@ -636,10 +640,10 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} id
      */
      this.get_gtt_by_instruction_id = function(id){
-        var params = {
+        var path_params = {
             'id' : id
         }
-        return apiservice.apiCall('gtt_by_instruction_id','GET',null,params)
+        return apiservice.apiCall('gtt_by_instruction_id','GET',null,null,path_params)
     }
 }
 
