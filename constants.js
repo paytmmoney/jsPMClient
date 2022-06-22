@@ -34,7 +34,15 @@ const endpoints = {
 
     'generate_tpin': '/edis/v1/generate/tpin',
     'validate_tpin': '/edis/v1/validate/tpin',
-    'status': '/edis/v1/status'
+    'status': '/edis/v1/status',
+
+    'price_chart_sym': '/data/v1/price-charts/sym',
+    
+    'gtt': '/gtt/v1/gtt',
+    'gtt_by_id': '/gtt/v1/gtt/{id}',
+    'gtt_aggregate': '/gtt/v1/gtt/aggregate',
+    'expiry_gtt': '/gtt/v1/gtt/expiry-date',
+    'gtt_by_instruction_id': '/gtt/v1/gtt/instructions/{id}'
 
 }
 
