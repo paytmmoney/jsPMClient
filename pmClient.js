@@ -528,7 +528,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             return apiservice.apiCall('gtt','GET',null,params,null)
         } else if ((status==null || status=="") && (pml_id!=null && pml_id!="")) {
             var params = {
-                'pml_id': pml_id
+                'pml-id': pml_id
             }
             return apiservice.apiCall('gtt','GET',null,params,null)
         } else {
