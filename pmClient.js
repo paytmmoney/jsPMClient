@@ -436,11 +436,25 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} exchange
      */
     this.security_master = function(scrip_type=null, exchange=null){
-        var params = {
-            'scrip_type': scrip_type, 
-            'exchange': exchange
+        if (scrip_type!=null && scrip_type!="" && exchange!=null && exchange!=""){
+            var params = {
+                'scrip_type': scrip_type,
+                'exchange': exchange
+            }
+            return apiservice.apiCall('security_master','GET',null,params,null)
+        } else if ((scrip_type!=null && scrip_type!="") && (exchange==null || exchange=="")) {
+            var params = {
+                'scrip_type': scrip_type
+            }
+            return apiservice.apiCall('security_master','GET',null,params,null)
+        } else if ((scrip_type==null || scrip_type=="") && (exchange!=null && exchange!="")) {
+            var params = {
+                'exchange': exchange
+            }
+            return apiservice.apiCall('security_master','GET',null,params,null)
+        } else {
+            return apiservice.apiCall('security_master','GET',null,null,null)
         }
-        return apiservice.apiCall('security_master','GET',null,params,null)
     }
 
     /**
@@ -501,11 +515,25 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} pml_id
      */
      this.get_gtt_by_status_or_pml_id = function(status=null,pml_id=null){
-        var params = {
-            'status': status,
-            'pml-id': pml_id
+        if (status!=null && status!="" && pml_id!=null && pml_id!=""){
+            var params = {
+                'status': status,
+                'pml-id': pml_id
+            }
+            return apiservice.apiCall('gtt','GET',null,params,null)
+        } else if ((status!=null && status!="")  && (pml_id==null || pml_id=="")) {
+            var params = {
+                'status': status
+            }
+            return apiservice.apiCall('gtt','GET',null,params,null)
+        } else if ((status==null || status=="") && (pml_id!=null && pml_id!="")) {
+            var params = {
+                'pml_id': pml_id
+            }
+            return apiservice.apiCall('gtt','GET',null,params,null)
+        } else {
+            return apiservice.apiCall('gtt','GET',null,null,null)
         }
-        return apiservice.apiCall('gtt','GET',null,params,null)
     }
 
     /**
