@@ -577,7 +577,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         var order = {
             'segment': segment,
             'exchange': exchange,
-            'pml_id': pml_id,
+            'pml-id': pml_id,
             'security_id': security_id,
             'product_type': product_type,
             'set_price': set_price,
