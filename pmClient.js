@@ -557,20 +557,13 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} triggered_at_price
      * @param {String} triggered_at_type
      */
-     this.create_gtt = function(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price, execution_ref_id=null, 
-        notification_ref_id=null, sub_type=null, triggered_at=null, triggered_at_price=null, triggered_at_type=null){
+     this.create_gtt = function(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price){
         var transaction_details = []
 
         var transaction_details_obj = {
             'quantity': quantity,
             'trigger_price': trigger_price,
-            'limit_price': limit_price,
-            'execution_ref_id': execution_ref_id,
-            'notification_ref_id': notification_ref_id,
-            'sub_type': sub_type,
-            'triggered_at': triggered_at,
-            'triggered_at_price': triggered_at_price,
-            'triggered_at_type': triggered_at_type
+            'limit_price': limit_price
         }
         transaction_details.push(transaction_details_obj)
 
