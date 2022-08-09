@@ -25,8 +25,6 @@ this.apiCall = function(api,http_method,payload=null,params=null,path_param=null
         method: http_method
     }
 
-    console.log(options);
-
     if (payload == null){
         delete options["body"];
     }
