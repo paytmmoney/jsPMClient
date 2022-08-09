@@ -119,12 +119,12 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         var helper = 'place_regular';
 
         //For placing stop loss order or stop loss market order
-        if (order_type == "SLM" || "SL"){
+        if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
         }
 
         //If placing sell CNC order
-        if (edis_txn_id && edis_auth_mode != null){
+        if (edis_txn_id != null && edis_auth_mode != null){
             order['edis_txn_id'] = edis_txn_id;
             order['edis_auth_mode'] = edis_auth_mode;
         }
@@ -192,12 +192,12 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         var helper = 'modify_regular'
 
         //For modifying stop loss order or stop loss market order
-        if (order_type == "SLM" || "SL"){
+        if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
         }
 
         //If modifying sell CNC order
-        if (edis_txn_id && edis_auth_mode != null){
+        if (edis_txn_id != null && edis_auth_mode != null){
             order['edis_txn_id'] = edis_txn_id;
             order['edis_auth_mode'] = edis_auth_mode;
         }
@@ -259,8 +259,8 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         }
         var helper = 'cancel_regular';
 
-        //For placing stop loss order or stop loss market order
-        if (order_type == "SLM" || "SL"){
+        //For canceling stop loss order or stop loss market order
+        if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
         }
 
@@ -308,7 +308,7 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         }
         
         //If modifying sell CNC order
-        if (edis_txn_id && edis_auth_mode != null){
+        if (edis_txn_id != null && edis_auth_mode != null){
             order['edis_txn_id'] = edis_txn_id;
             order['edis_auth_mode'] = edis_auth_mode;
         }

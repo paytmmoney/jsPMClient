@@ -35,6 +35,12 @@ describe("PMClient", () => {
         ).toBe("NotFoundError")
     });
 
+    test("error_test_6", () => {
+        expect(
+            error.OtherError("error")
+        ).toBe("OtherError")
+    });
+
     test("set_access_token_test", () => {
         connect.set_access_token("invalid_token");;
         const order = connect.set_access_token(access_token="access_token")
@@ -56,12 +62,19 @@ describe("PMClient", () => {
 
     test("login_url_test", () => {
         expect(
-            connect.get_login_URL()
-        ).toBe("https://login-stg.paytmmoney.com/merchant-login?returnUrl=https://www.google.com/&apiKey=api_key")
+            connect.get_login_URL(state_key="state_key")
+        ).toBe("https://login-stg.paytmmoney.com/merchant-login?apiKey=api_key&state=state_key")
     })
 
+    test("login_url_null_test", () => {
+        expect(
+            connect.get_login_URL(state_key=null)
+        ).toThrow(Error)
+    })
+
+
     test("place_order_attribute_test", () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.place_order(        
         source="W",
         txn_type="B",
@@ -71,10 +84,15 @@ describe("PMClient", () => {
         security_id="772",
         quantity=1,
         validity="DAY",
-        order_type="LMT",
+        order_type="SL",
         price=620.0,
-        off_mkt_flag=false)
-        expect(order).toThrow(ConnectionError)
+        off_mkt_flag=false,
+        profit_value=null,
+        stoploss_value=null,
+        trigger_price=null,
+        edis_txn_id="123",
+        edis_auth_mode="234")
+        expect(order).toThrow(error.AttributeError)
     });
 
     test("place_order_connection_test", () => {
@@ -135,23 +153,6 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
 
-    test("place_order_attribute_test",  () => {
-        connect.set_access_token("valid_token");
-        const order = connect.place_order(        
-            source="W",
-            txn_type="B",
-            exchange="NSE",
-            segment="E",
-            product="",
-            security_id="772",
-            quantity=1,
-            validity="DAY",
-            order_type="LMT",
-            price=620.0,
-            off_mkt_flag=false)
-        expect(order).toThrow(error.AttributeError)
-    });
-
     test("modify_order_connection_test",  () => {
         connect.set_access_token("invalid_token");
         const order = connect.modify_order(
@@ -163,13 +164,19 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
             order_no="order_no",
             serial_no=1,
-            group_id=8 )
+            group_id=8,
+            null,
+            null,
+            null,
+            edis_txn_id="123",
+            edis_auth_mode="234"
+            )
         expect(order).toThrow(error.ConnectionError)
     });
 
@@ -184,15 +191,18 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
             order_no="order_no",
             serial_no=1,
             group_id=8,
+            trigger_price=null,
             leg_no="2",
-            algo_order_no="4"
+            algo_order_no="4",
+            edis_txn_id="123",
+            edis_auth_mode="234"
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -208,20 +218,24 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
             order_no="order_no",
             serial_no=1,
             group_id=8,
-            leg_no="2"
+            null,
+            leg_no="2",
+            null,
+            edis_txn_id="123",
+            edis_auth_mode="234"
             )
         expect(order).toThrow(error.ConnectionError)
     });
 
     test("modify_order_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.modify_order(
             source="N",
             txn_type="B",
@@ -231,13 +245,19 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=False,
             mkt_type="NL",
             order_no="order_no",
             serial_no=1,
-            group_id=8)
+            group_id=8,
+            trigger_price=9.8,
+            leg_no=null,
+            algo_order_no=null,
+            edis_txn_id="123",
+            edis_auth_mode="234"
+            )
         expect(order).toThrow(error.AttributeError)
     });
 
@@ -252,7 +272,7 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
@@ -273,7 +293,7 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
@@ -296,7 +316,7 @@ describe("PMClient", () => {
             security_id="772",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SLM",
             price=620.0,
             off_mkt_flag=false,
             mkt_type="NL",
@@ -310,7 +330,7 @@ describe("PMClient", () => {
     });
 
     test("cancel_order_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.cancel_order(
             source="N",
             txn_type="B",
@@ -320,13 +340,15 @@ describe("PMClient", () => {
             security_id="",
             quantity=2,
             validity="DAY",
-            order_type="LMT",
+            order_type="SL",
             price=620.0,
             off_mkt_flag=False,
             mkt_type="NL",
             order_no="order_no",
             serial_no=2,
-            group_id=8)
+            group_id=8,
+            trigger_price=null
+            )
         expect(order).toThrow(error.AttributeError)
     });
     test("convert_order_connection_test",  () => {
@@ -340,7 +362,10 @@ describe("PMClient", () => {
             product_to="I",
             security_id="2885",
             quantity=100,
-            mkt_type="NL")
+            mkt_type="NL",
+            edis_txn_id="123",
+            edis_auth_mode="234"
+            )
         expect(order).toThrow(error.ConnectionError)
     });
     test("order_book_connection_test",  () => {
@@ -377,7 +402,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("funds_summary_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.funds_summary()
         expect(order).toThrow(error.AttributeError)
     });
@@ -436,42 +461,10 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("scrips_margin_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.scrips_margin(
             source="N",
-            margin_list=[
-                {
-                    "exchange": "NSE",
-                    "segment": "",
-                    "security_id": "46840",
-                    "txn_type": "B",
-                    "quantity": "250",
-                    "strike_price": "0",
-                    "trigger_price": "0",
-                    "instrument": "FUTSTK"
-                },
-                {
-                    "exchange": "NSE",
-                    "segment": "D",
-                    "security_id": "46834",
-                    "txn_type": "B",
-                    "quantity": "250",
-                    "strike_price": "0",
-                    "trigger_price": "0",
-                    "instrument": "FUTSTK"
-                },
-                {
-                    "exchange": "NSE",
-                    "segment": "E",
-                    "security_id": "27466",
-                    "txn_type": "B",
-                    "quantity": "25",
-                    "strike_price": "0",
-                    "trigger_price": "0",
-                    "instrument": "EQUITY"
-                }
-            ]
-
+            margin_list=null
         )
         expect(order).toThrow(error.AttributeError)
     });
@@ -492,32 +485,43 @@ describe("PMClient", () => {
         const order = connect.security_master()
         expect(order).toThrow(error.ConnectionError)
     });
+    test("security_master_connection_test1",  () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.security_master("et","NS")
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("security_master_connection_test2",  () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.security_master("et",null)
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("security_master_connection_test2",  () => {
+        connect.set_access_token("invalid_token");
+        const order = connect.security_master(null,"NS")
+        expect(order).toThrow(error.ConnectionError)
+    });
     test("generate_tpin_connection_test", () => {
         connect.set_access_token("invalid_token");
         const order = connect.generate_tpin()
         expect(order).toThrow(error.ConnectionError)
     });
     test("generate_tpin_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.generate_tpin()
         expect(order).toThrow(error.AttributeError)
     });
     test("validate_tpin_connection_test",  () => {
         connect.set_access_token("invalid_token");
         const order = connect.validate_tpin(
-            exchange="NSE",
-            segment="E",
-            security_id="772",
-            quantity=2)
+            trade_type="trade_type",
+            isin_list=[])
         expect(order).toThrow(error.ConnectionError)
     });
     test("validate_tpin_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.validate_tpin(
-            exchange="NSE",
-            segment="E",
-            security_id="772",
-            quantity=2)
+            trade_type="trade_type",
+            isin_list=[])
         expect(order).toThrow(error.AttributeError)
     });
     test("status_connection_test",  () => {
@@ -526,7 +530,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("status_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.status(edis_request_id=10131)
         expect(order).toThrow(error.AttributeError)
     });
@@ -536,7 +540,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("user_details_attribute_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.get_user_details()
         expect(order).toThrow(error.AttributeError)
     });
@@ -584,7 +588,7 @@ describe("PMClient", () => {
         expect(order).toThrow(error.ConnectionError)
     });
     test("create_gtt_attribute_test", () => {
-        connect.set_access_token("invalid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.create_gtt(        
             segment="E",
             exchange="NSE",
@@ -601,25 +605,46 @@ describe("PMClient", () => {
         expect(order).toThrow(error.AttributeError)
     });
     test("get_gtt_by_id_or_status_connection_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("Invalid_token");
+        const order = connect.get_gtt_by_status_or_pml_id()
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_by_id_or_status_connection_test1",  () => {
+        connect.set_access_token("Invalid_token");
         const order = connect.get_gtt_by_status_or_pml_id(
-            status="ACTIVE",
-            pml_id="1000001488"
+            status="ACTVE",
+            pml_id="111111111111111"
+        )
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_by_id_or_status_connection_test2",  () => {
+        connect.set_access_token("Invalid_token");
+        const order = connect.get_gtt_by_status_or_pml_id(
+            null,
+            pml_id="1111111111111118"
+        )
+        expect(order).toThrow(error.ConnectionError)
+    });
+    test("get_gtt_by_id_or_status_connection_test3",  () => {
+        connect.set_access_token("Invalid_token");
+        const order = connect.get_gtt_by_status_or_pml_id(
+            status="ACTVE",
+            null
         )
         expect(order).toThrow(error.ConnectionError)
     });
     test("get_gtt_connection_test",  () => {
-        connect.set_access_token("valid_token");
+        connect.set_access_token("Invalid_token");
         const order = connect.get_gtt(id=2563)
         expect(order).toThrow(error.ConnectionError)
     });
     test("delete_gtt_connection_test",  () => {
         connect.set_access_token("valid_token");
-        const order = connect.get_gtt(id=2563)
+        const order = connect.delete_gtt(id=2563)
         expect(order).toThrow(error.ConnectionError)
     });
     test("update_gtt_attribute_test", () => {
-        connect.set_access_token("invalid_token");
+        connect.set_access_token("eyJhbGciOiJIUzI1NiJ9.eyJhcGlLZXkiOiIwNTY2ZTRhMGIyNzI0Y2NlYTA2ZjMwYTdhMTlkMTk4NyIsIm1lcmNoYW50SWQiOiJNRVJfMjI2IiwicGFzc2NvZGVWYWxpZCI6dHJ1ZSwiYXV0aG9yaXNhdGlvbiI6IltcIlAxXCIsXCJQMlwiLFwiUDNcIixcIlA0XCJdIiwicGFzc2NvZGVWYWxpZFRpbGxFUE9DU2Vjb25kcyI6IjE2NTk5ODMzNDAwMDAiLCJzc29Ub2tlbiI6IlVmNndtYURTZDNrT3NNdlJQeFptOGlpNDFsbHhIMXFUNTlRK2hOeXVCcTMzN0FFSTFXTmlNUXQwcjlrWS9MMXMiLCJ1c2VySWQiOiI3OTQ1NjkiLCJpc3MiOiJwYXl0bW1vbmV5IiwiYXVkIjoibWVyY2hhbnQifQ.V_A8GjygTEWtArfF4ZM-04nyIe053rWTmcbmyDo0iYM");
         const order = connect.update_gtt(    
             id=89,    
             set_price=12.80,
