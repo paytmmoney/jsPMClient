@@ -213,8 +213,10 @@ pm.user_holdings_data();
 
 ### Security Master
 * Data will be provided in CSV format
+* User can filter by scrip_type or exchange 
+* NOTE: Both not to be passed together
 ```javascript
-pm.security_master();
+pm.security_master(scrip_type, exchange);
 ```
 
 ### User Details
