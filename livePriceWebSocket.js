@@ -9,19 +9,61 @@ let WebSocket = require("ws");
     
     url; // url to which request is hit for creating websocket connection
 
+    onOpenListener; // listens to connection open event
+
+    onCloseListener; // listens to connection closure event
+
+    onMesssageListener; // listens to ticks sent by server
+
+    onErrorListener; // listens to error event
+
+    setOnOpenListener(onOpenListener) {
+        this.onOpenListener = onOpenListener
+    }
+
+    setOnCloseListener(onCloseListener) {
+        this.onCloseListener = onCloseListener
+    }
+
+    setOnMessageListener(onMessageListener) {
+        this.onMessageListener = onMessageListener
+    }
+
+    setOnErrorListener(onErrorListener) {
+        this.onErrorListener = onErrorListener
+    }
+
     /**
      * This method creates a websocket connection with broadcast server 
      * @param {String} jwt Public Access Token
-     * @returns {WebSocket} WebSocket Object
      */
     connect(jwt) {
         this.url = 'wss://developer-ws.paytmmoney.com/broadcast/user/v1/data?' + `x_jwt_token=${jwt}`;  // prod
 
         this.socket = new WebSocket(this.url);
 
-        return this.socket;
-    }
+        this.socket.on('open', () => {
+            console.log("connection made with server")
+            this.onOpenListener();
+        })
 
+        this.socket.on('close', (code, reason) => {
+            this.onCloseListener(code, reason);
+        })
+
+        this.socket.on('message', (packet) => {
+            if(typeof packet === "string")
+                this.onErrorListener(packet); // to handle error message sent by server
+            else
+                this.onMessageListener(this.parseBinary(packet)) // to handle ByteBuffer packets sent by server
+        })
+
+        this.socket.on('error', (err) => {
+            console.log("on error triggered")
+            this.onErrorListener(err)
+        })
+    }
+    
     /**
      * This method subscribes the preferences sent by user with Broadcast Server
      * @param {Array} pref array of preferences
@@ -36,7 +78,7 @@ let WebSocket = require("ws");
     }
     
     /**
-     * This method parses the packets received from Broadcast Server (in BytBuffer) to human-readable format
+     * This method parses the packets received from Broadcast Server (in ByteBuffer) to human-readable format
      * @param {ArrayByteBuffer} packet ByteBuffer response packet received from Broadcast server
      * @returns {Array} response parsed in human-readable format 
      */
