@@ -1,4 +1,5 @@
 let WebSocket = require("ws");
+const endpoints = require('./constants').endpoints;
 
 /**
  * This class handles websocket connection required for streaming live price of stocks.
@@ -38,7 +39,7 @@ let WebSocket = require("ws");
      * @param {String} jwt Public Access Token
      */
     connect(jwt) {
-        this.url = 'wss://developer-ws.paytmmoney.com/broadcast/user/v1/data?' + `x_jwt_token=${jwt}`;  // prod
+        this.url = endpoints['websocket_url'] + jwt;
 
         this.socket = new WebSocket(this.url);
 
@@ -59,7 +60,6 @@ let WebSocket = require("ws");
         })
 
         this.socket.on('error', (err) => {
-            console.log("on error triggered")
             this.onErrorListener(err)
         })
     }
@@ -84,7 +84,6 @@ let WebSocket = require("ws");
      */
     parseBinary(packet) {
             let len = packet.length, response = [];
-            // console.log("Packet length: " + len);
             let ab = new ArrayBuffer(len);
             let dv = new Int8Array(ab);
             for (let i = 0; i < len; ++i) {
@@ -93,37 +92,26 @@ let WebSocket = require("ws");
             let dvu = new DataView(ab);
             let position = 0;
             while (position != len) {
-                // console.log("position at start of while loop: " + position)
                 let type = dvu.getInt8(position);
                 position = position + 1;
-                // console.log("Data Type: " + type);
                 switch (type) {
                     case 64:
-                        // console.log("IndexLtpPacket")
                         processIndexLtpPacket();
                         break;
                     case 65:
-                        // console.log("IndexQuotePacket")
                         processIndexQuotePacket();
                         break;
                     case 66:
                         processIndexFullPacket();
                         break;
                     case 61:
-                        // console.log("LtpPacket")
                         processLtpPacket();
                         break;
                     case 62:
-                        // console.log("QuotePacket")
                         processQuotePacket();
                         break;
                     case 63:
-                        // console.log("FullPacket")
                         processFullPacket();
-                        break;
-                    default:
-                        // console.log("Default")
-                        // console.log("position: " + position)
                         break;
                 }
             }

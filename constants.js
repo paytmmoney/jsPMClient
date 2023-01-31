@@ -42,8 +42,9 @@ const endpoints = {
     'gtt_by_id': '/gtt/v1/gtt/{id}',
     'gtt_aggregate': '/gtt/v1/gtt/aggregate',
     'expiry_gtt': '/gtt/v1/gtt/expiry-date',
-    'gtt_by_instruction_id': '/gtt/v1/gtt/instructions/{id}'
+    'gtt_by_instruction_id': '/gtt/v1/gtt/instructions/{id}',
 
+    'websocket_url' : 'wss://developer-ws.paytmmoney.com/broadcast/user/v1/data?x_jwt_token='
 }
 
 exports.endpoints = endpoints
