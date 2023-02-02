@@ -1,16 +1,12 @@
 var PMClient = require('../pmClient').PMClient
 
-var connect = new PMClient(api_key="api_key",api_secret="api_secret");
+var connect = new PMClient(api_key="api_key",api_secret="api_secret")
 
-connect.generate_session(request_token="request_token")
-    .then(function(response){
-        console.log(response)
-    })
-    .catch(function(err){
-        console.log(err);
-    })
+connect.generate_session(request_token="your_request_token")
 
-connect.set_access_token("access_token")
+connect.set_access_token("your_access_token")
+connect.set_public_access_token("your_public_access_token")
+connect.set_read_access_token("your_read_access_token")
 
 connect.generate_tpin()
     .then(function(response){

@@ -10,7 +10,7 @@ const endpoints = require('./constants').endpoints
  * @param {String} api_secret
  * @param {String} access_token 
  */
-var PMClient  = function(api_key, api_secret, access_token=null){
+var PMClient  = function(api_key, api_secret, access_token=null, public_access_token=null, read_access_token=null){
     if (api_key != null || undefined){
         this.api_key = api_key;
     } else {
@@ -22,7 +22,12 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         throw Error("api_secret cannot be null");
     }
     this.access_token = access_token;
-    
+    apiservice.access_token = access_token;
+    this.public_access_token = public_access_token;
+    apiservice.public_access_token = public_access_token;
+    this.read_access_token = read_access_token;
+    apiservice.read_access_token = read_access_token;
+
     /**
      * Set the access token 
      * @param {String} access_token 
@@ -31,6 +36,18 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         this.access_token = access_token;
         apiservice.access_token = access_token;
         return this.access_token;
+    }
+
+    this.set_public_access_token = function (public_access_token) {
+        this.public_access_token = public_access_token;
+        apiservice.public_access_token = public_access_token;
+        return this.public_access_token;
+    }
+    
+    this.set_read_access_token = function (read_access_token) {
+        this.read_access_token = read_access_token;
+        apiservice.read_access_token = read_access_token;
+        return this.read_access_token;
     }
 
     /**
@@ -50,22 +67,21 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} request_token 
      */
     this.generate_session = async function (request_token) {
-        var order = {
-            merchantSecret : api_secret
+        var request_body = {
+            'api_key':this.api_key,
+            'api_secret_key':this.api_secret,
+            'request_token':request_token
         }
-        var query_param = {
-            requestToken : request_token,
-            apiKey : api_key,
-        }
-        var token = await apiservice.apiCall('access_token', 'POST', order, query_param, null)
+        var token = await apiservice.apiCall('access_token', 'POST', request_body, null, null)
 
         const res = JSON.parse(token);
 
         if (token) {
-            this.set_access_token(res['data']);
+            this.set_access_token(res['access_token']);
+            this.set_public_access_token(res['public_access_token']);
+            this.set_read_access_token(res['read_access_token']);
         }
-
-        return res['data'];
+        return res;
     }
 
     /**
@@ -435,26 +451,11 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} scrip_type
      * @param {String} exchange
      */
-    this.security_master = function(scrip_type=null, exchange=null){
-        if (scrip_type!=null && scrip_type!="" && exchange!=null && exchange!=""){
-            var params = {
-                'scrip_type': scrip_type,
-                'exchange': exchange
-            }
-            return apiservice.apiCall('security_master','GET',null,params,null)
-        } else if ((scrip_type!=null && scrip_type!="") && (exchange==null || exchange=="")) {
-            var params = {
-                'scrip_type': scrip_type
-            }
-            return apiservice.apiCall('security_master','GET',null,params,null)
-        } else if ((scrip_type==null || scrip_type=="") && (exchange!=null && exchange!="")) {
-            var params = {
-                'exchange': exchange
-            }
-            return apiservice.apiCall('security_master','GET',null,params,null)
-        } else {
-            return apiservice.apiCall('security_master','GET',null,null,null)
+    this.security_master = function(file_name){
+        var path_params = {
+            'file_name' : file_name
         }
+        return apiservice.apiCall('security_master','GET',null,null,path_params)
     }
 
     /**
@@ -665,6 +666,18 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'id' : id
         }
         return apiservice.apiCall('gtt_by_instruction_id','GET',null,null,path_params)
+    }
+
+    /**
+     * Live Market Data
+     * @param {String} id
+     */
+    this.get_live_market_data = function(mode_type, exchange, scrip_id, scrip_type){
+        var path_params = {
+            'mode_type': mode_type,
+            'prefrences': exchange+":"+scrip_id+":"+scrip_type
+        }
+        return apiservice.apiCall('live_market_data','GET',null,null,path_params)
     }
 }
 
