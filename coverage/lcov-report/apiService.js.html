@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.75% </span>
+                <span class="strong">69.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/37</span>
+                <span class='fraction'>25/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28% </span>
+                <span class="strong">44% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/25</span>
+                <span class='fraction'>11/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.75% </span>
+                <span class="strong">69.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/37</span>
+                <span class='fraction'>25/36</span>
             </div>
         
             
@@ -126,9 +126,7 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -156,8 +154,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">51x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-yes">29x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -170,12 +166,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -220,8 +216,6 @@ this.apiCall = function(api,http_method,payload=<span class="branch-0 cbranch-no
         method: http_method
     }
 &nbsp;
-    console.log(options);
-&nbsp;
     if (payload == null){
         delete options["body"];
     }
@@ -234,14 +228,14 @@ this.apiCall = function(api,http_method,payload=<span class="branch-0 cbranch-no
 &nbsp;
     //request method to call the apis
     return new Promise(function(resolve,reject){
-        request(options, <span class="fstat-no" title="function not covered" >fu</span>nction(error, response, body){
-<span class="cstat-no" title="statement not covered" >            if(body){</span>
-<span class="cstat-no" title="statement not covered" >                if (response.statusCode != 200){</span>
-<span class="cstat-no" title="statement not covered" >                    if (response.statusCode == 401) {</span>
+        request(options, function(error, response, body){
+            if(body){
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (response.statusCode != 200){
+                    <span class="missing-if-branch" title="if path not taken" >I</span>if (response.statusCode == 401) {
 <span class="cstat-no" title="statement not covered" >                        throw new exception.ConnectionError(body);</span>
-                    } else <span class="cstat-no" title="statement not covered" >if (response.statusCode == 400) {</span>
-<span class="cstat-no" title="statement not covered" >                        throw new exception.AttributeError(body);</span>
-                    } else <span class="cstat-no" title="statement not covered" >if (response.statusCode == 404) {</span>
+                    } else if (response.statusCode == 400) {
+                        throw new exception.AttributeError(body);
+                    } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="else path not taken" >E</span>if (response.statusCode == 404) {</span>
 <span class="cstat-no" title="statement not covered" >                        throw new exception.NotFoundError(body);</span>
                     } else <span class="cstat-no" title="statement not covered" >if (response.statusCode == 415) {</span>
 <span class="cstat-no" title="statement not covered" >                        throw new exception.MediaTypeError(body);</span>
@@ -252,7 +246,7 @@ this.apiCall = function(api,http_method,payload=<span class="branch-0 cbranch-no
                     }
                 }
 <span class="cstat-no" title="statement not covered" >                resolve(body);</span>
-            } else {
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>{
 <span class="cstat-no" title="statement not covered" >                reject(error);</span>
             }
         });
@@ -265,7 +259,7 @@ this.apiCall = function(api,http_method,payload=<span class="branch-0 cbranch-no
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Aug 09 2022 09:20:50 GMT+0530 (India Standard Time)
+                at 2023-01-31T15:27:18.136Z
             </div>
         <script src="prettify.js"></script>
         <script>

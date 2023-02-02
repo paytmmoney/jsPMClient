@@ -60,6 +60,7 @@ const endpoints = {
     // live market data endpoints
     'live_market_data': ['/data/v1/price/live?mode={mode_type}&pref={prefrences}',['access_token','read_access_token']]
 
+    'websocket_url' : 'wss://developer-ws.paytmmoney.com/broadcast/user/v1/data?x_jwt_token='
 }
 
 exports.endpoints = endpoints

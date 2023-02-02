@@ -1,34 +1,43 @@
 const LivePriceWebSocket = require("../LivePriceWebSocket.js");
 let livePriceWebSocket = new LivePriceWebSocket();
-jwt = "public_access_token"
-ws = livePriceWebSocket.connect(jwt) //pass public_access_token
+jwt = "your_public_access_token"
 
 customerPreferences = []
 
 preference = {
         "actionType" : 'ADD', // 'ADD', 'REMOVE'
         "modeType" : 'LTP', // 'LTP', 'FULL', 'QUOTE'
-        "scripType" : 'INDEX', // 'ETF', 'FUTURE', 'INDEX', 'OPTION', 'EQUITY'
-        "exchangeType" : 'BSE', // 'BSE', 'NSE'
-        "scripId" : '51'
+        "scripType" : 'EQUITY', // 'ETF', 'FUTURE', 'INDEX', 'OPTION', 'EQUITY'
+        "exchangeType" : 'NSE', // 'BSE', 'NSE'
+        "scripId" : '3456'
         }
 
 customerPreferences.push(preference)
 
-// send prefernces via websocket once connection is open
-ws.on('open', function () {
+// send preferences via websocket once connection is open
+livePriceWebSocket.setOnOpenListener(() => {
     livePriceWebSocket.subscribe(customerPreferences)
 })
 
-ws.on('message', function (data) {
-    try {
-        printArray(livePriceWebSocket.parseBinary(data));
-    } 
-    catch (e) {
-        console.log("Error message received from server: " + e);
-    }
-});
+// this event gets triggered when connection is closed
+livePriceWebSocket.setOnCloseListener((code, reason) => {
+        console.log(" disconnected Code: " + code + " Reason: " + reason);
+})
 
+// this event gets triggered when response is received
+livePriceWebSocket.setOnMessageListener((arr) => {
+    printArray(arr)
+})
+
+// this event gets triggered when error occurs
+livePriceWebSocket.setOnErrorListener((err) => {
+    console.log(err)
+})
+
+// this method is called to create a websocket connection with broadcast server
+livePriceWebSocket.connect(jwt) //pass public_access_token
+
+// this method prints the response array received 
 function printArray(arr) {
     console.log("data received from server: ");
     arr.forEach((obj) => {
@@ -38,12 +47,4 @@ function printArray(arr) {
         })
         console.log("\n")
     })
-} 
-
-ws.on('error', function (err) {
-    console.log(err)
-});
-
-ws.on('close', function (code, reason) {
-    console.log(" disconnected Code: " + code + " Reason: " + reason);
-});
+}

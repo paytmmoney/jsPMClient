@@ -1,4 +1,5 @@
 let WebSocket = require("ws");
+const endpoints = require('./constants').endpoints;
 
 /**
  * This class handles websocket connection required for streaming live price of stocks.
@@ -9,19 +10,60 @@ let WebSocket = require("ws");
     
     url; // url to which request is hit for creating websocket connection
 
+    onOpenListener; // listens to connection open event
+
+    onCloseListener; // listens to connection closure event
+
+    onMesssageListener; // listens to ticks sent by server
+
+    onErrorListener; // listens to error event
+
+    setOnOpenListener(onOpenListener) {
+        this.onOpenListener = onOpenListener
+    }
+
+    setOnCloseListener(onCloseListener) {
+        this.onCloseListener = onCloseListener
+    }
+
+    setOnMessageListener(onMessageListener) {
+        this.onMessageListener = onMessageListener
+    }
+
+    setOnErrorListener(onErrorListener) {
+        this.onErrorListener = onErrorListener
+    }
+
     /**
      * This method creates a websocket connection with broadcast server 
      * @param {String} jwt Public Access Token
-     * @returns {WebSocket} WebSocket Object
      */
     connect(jwt) {
-        this.url = 'wss://developer-ws.paytmmoney.com/broadcast/user/v1/data?' + `x_jwt_token=${jwt}`;  // prod
+        this.url = endpoints['websocket_url'] + jwt;
 
         this.socket = new WebSocket(this.url);
 
-        return this.socket;
-    }
+        this.socket.on('open', () => {
+            console.log("connection made with server")
+            this.onOpenListener();
+        })
 
+        this.socket.on('close', (code, reason) => {
+            this.onCloseListener(code, reason);
+        })
+
+        this.socket.on('message', (packet) => {
+            if(typeof packet === "string")
+                this.onErrorListener(packet); // to handle error message sent by server
+            else
+                this.onMessageListener(this.parseBinary(packet)) // to handle ByteBuffer packets sent by server
+        })
+
+        this.socket.on('error', (err) => {
+            this.onErrorListener(err)
+        })
+    }
+    
     /**
      * This method subscribes the preferences sent by user with Broadcast Server
      * @param {Array} pref array of preferences
@@ -36,13 +78,12 @@ let WebSocket = require("ws");
     }
     
     /**
-     * This method parses the packets received from Broadcast Server (in BytBuffer) to human-readable format
+     * This method parses the packets received from Broadcast Server (in ByteBuffer) to human-readable format
      * @param {ArrayByteBuffer} packet ByteBuffer response packet received from Broadcast server
      * @returns {Array} response parsed in human-readable format 
      */
     parseBinary(packet) {
             let len = packet.length, response = [];
-            // console.log("Packet length: " + len);
             let ab = new ArrayBuffer(len);
             let dv = new Int8Array(ab);
             for (let i = 0; i < len; ++i) {
@@ -51,37 +92,26 @@ let WebSocket = require("ws");
             let dvu = new DataView(ab);
             let position = 0;
             while (position != len) {
-                // console.log("position at start of while loop: " + position)
                 let type = dvu.getInt8(position);
                 position = position + 1;
-                // console.log("Data Type: " + type);
                 switch (type) {
                     case 64:
-                        // console.log("IndexLtpPacket")
                         processIndexLtpPacket();
                         break;
                     case 65:
-                        // console.log("IndexQuotePacket")
                         processIndexQuotePacket();
                         break;
                     case 66:
                         processIndexFullPacket();
                         break;
                     case 61:
-                        // console.log("LtpPacket")
                         processLtpPacket();
                         break;
                     case 62:
-                        // console.log("QuotePacket")
                         processQuotePacket();
                         break;
                     case 63:
-                        // console.log("FullPacket")
                         processFullPacket();
-                        break;
-                    default:
-                        // console.log("Default")
-                        // console.log("position: " + position)
                         break;
                 }
             }
@@ -162,7 +192,7 @@ let WebSocket = require("ws");
                     let depthObj = {}  
                     depthObj.buy_quantity = dvu.getInt32(1 + (i * depth_size), true); 
                     depthObj.sell_quantity = dvu.getInt32(5 + (i * depth_size), true); 
-                    depthObj.buy_order = dvu.getInt16(10 + (i * depth_size), true); 
+                    depthObj.buy_order = dvu.getInt16(9 + (i * depth_size), true); 
                     depthObj.sell_order = dvu.getInt16(11 + (i * depth_size), true); 
                     depthObj.buy_price = dvu.getFloat32(13 + (i * depth_size), true).toFixed(2); 
                     depthObj.sell_price = dvu.getFloat32(17 + (i * depth_size), true).toFixed(2);  
