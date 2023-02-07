@@ -58,7 +58,11 @@ const endpoints = {
     'gtt_by_instruction_id': ['/gtt/v1/gtt/instructions/{id}',['access_token','read_access_token']],
 
     // live market data endpoints
-    'live_market_data': ['/data/v1/price/live?mode={mode_type}&pref={prefrences}',['access_token','read_access_token']]
+    'live_market_data': ['/data/v1/price/live?mode={mode_type}&pref={prefrences}',['access_token','read_access_token']],
+
+    // fno option chain
+    'option_chain': ['/fno/v1/option-chain?type={type}&symbol={symbol}&expiry={expiry}',['access_token','read_access_token']],
+    'option_chain_config': ['/fno/v1/option-chain/config?symbol={symbol}',['access_token','read_access_token']],
 
     'websocket_url' : 'wss://developer-ws.paytmmoney.com/broadcast/user/v1/data?x_jwt_token='
 }
