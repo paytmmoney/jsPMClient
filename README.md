@@ -27,7 +27,7 @@ User needs to create an object of sdk and pass apiKey & apiSecretKey
 // Initialize PMClient using apiKey, apiSecret.
 pm = PMClient(api_key="your_api_key", api_secret="your_api_secret");
 // Initialize PMClient using apiKey, apiSecret & access_token if user has already generated.
-pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", access_token="your_access_token");
+pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", access_token="access_token",public_access_token="public_access_token", read_access_token="read_access_token");
 ```
 
 
@@ -216,10 +216,9 @@ pm.user_holdings_data();
 
 ### Security Master
 * Data will be provided in CSV format
-* User can filter by scrip_type or exchange 
-* NOTE: Both not to be passed together
+* User can filter by file_name
 ```javascript
-pm.security_master(scrip_type, exchange);
+pm.security_master("file_name);
 ```
 
 ### User Details
@@ -249,12 +248,6 @@ pm.status(edis_request_id);
 * To end session.
 ```javascript
 pm.logout();
-```
-
-### Price Chart
-* To get data for the candle stick(ohlc) of time period.
-```javascript
-pm.price_chart_sym(cont, exchange, expiry, from_date, inst_type, interval, symbol, to_date, month_id, series, strike);
 ```
 
 ### Create GTT
@@ -303,6 +296,24 @@ pm.get_gtt_aggregate();
 * To GTT by InstructionId.
 ```javascript
 pm.get_gtt_by_instruction_id(id);
+```
+
+### Get Live Price via API
+* To Get Live Price Data via API
+```javascript
+pmClient.get_live_market_data("mode", "exchange", "scripId", "scripType")
+```
+
+### Get Option Chain
+* To Get Option Chain using type, symbol and expiry (in DD-MM-YYYY format)
+```javascript
+pmClient.get_option_chain("type", "symbol", "expiry")
+```
+
+### Get Option Chain Config
+* To Get Option Chain Config using symbol
+```javascript
+pmClient.get_option_chain_config("symbol")
 ```
 
 ## WebSocket Usage

@@ -38,12 +38,20 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         return this.access_token;
     }
 
+    /**
+     * Set the public access token 
+     * @param {String} public_access_token 
+     */
     this.set_public_access_token = function (public_access_token) {
         this.public_access_token = public_access_token;
         apiservice.public_access_token = public_access_token;
         return this.public_access_token;
     }
     
+    /**
+     * Set the read access token 
+     * @param {String} read_access_token 
+     */
     this.set_read_access_token = function (read_access_token) {
         this.read_access_token = read_access_token;
         apiservice.read_access_token = read_access_token;
@@ -63,7 +71,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
     }
 
     /**
-     * Generate session and get the access_token
+     * Generate session and get the tokens
      * @param {String} request_token 
      */
     this.generate_session = async function (request_token) {
@@ -489,26 +497,26 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         return apiservice.apiCall('status','GET',null,params,null)
     }
 
-    /**
-     * Historical data
-     * @
-     */
-    this.price_chart_sym = function(cont, exchange, expiry, from_date, inst_type, interval, symbol, to_date, month_id=null, series=null, strike=null){
-        var order = {
-            'cont': cont,
-            'exchange': exchange,
-            'expiry': expiry,
-            'fromDate': from_date,
-            'instType': inst_type,
-            'interval': interval,
-            'monthId': month_id,
-            'series': series,
-            'strike': strike,
-            'symbol': symbol,
-            'toDate': to_date
-        }
-        return apiservice.apiCall('price_chart_sym','POST',order,null,null)
-    }
+    // /**
+    //  * Historical data
+    //  * @
+    //  */
+    // this.price_chart_sym = function(cont, exchange, expiry, from_date, inst_type, interval, symbol, to_date, month_id=null, series=null, strike=null){
+    //     var order = {
+    //         'cont': cont,
+    //         'exchange': exchange,
+    //         'expiry': expiry,
+    //         'fromDate': from_date,
+    //         'instType': inst_type,
+    //         'interval': interval,
+    //         'monthId': month_id,
+    //         'series': series,
+    //         'strike': strike,
+    //         'symbol': symbol,
+    //         'toDate': to_date
+    //     }
+    //     return apiservice.apiCall('price_chart_sym','POST',order,null,null)
+    // }
 
     /**
      * Get GTT by status or pml_id
@@ -670,7 +678,10 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
 
     /**
      * Live Market Data
-     * @param {String} id
+     * @param {String} mode_type
+     * @param {String} exchange
+     * @param {String} scrip_id
+     * @param {String} scrip_type
      */
     this.get_live_market_data = function(mode_type, exchange, scrip_id, scrip_type){
         var path_params = {
@@ -678,6 +689,32 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'prefrences': exchange+":"+scrip_id+":"+scrip_type
         }
         return apiservice.apiCall('live_market_data','GET',null,null,path_params)
+    }
+
+    /**
+     * Option Chain
+     * @param {String} type
+     * @param {String} symbol
+     * @param {String} expiry
+     */
+        this.get_option_chain = function(type, symbol, expiry){
+            var path_params = {
+                'type': type,
+                'symbol': symbol,
+                'expiry':expiry
+            }
+            return apiservice.apiCall('option_chain','GET',null,null,path_params)
+        }
+
+    /**
+     * Option Chain Config
+     * @param {String} symbol
+     */
+    this.get_option_chain_config = function(symbol){
+        var path_params = {
+            'symbol': symbol
+        }
+        return apiservice.apiCall('option_chain_config','GET',null,null,path_params)
     }
 }
 
