@@ -119,9 +119,7 @@ describe("PMClient", () => {
         off_mkt_flag=false,
         profit_value=null,
         stoploss_value=null,
-        trigger_price=null,
-        edis_txn_id="123",
-        edis_auth_mode="234")
+        trigger_price=null)
         expect(order).toThrow(error.AttributeError)
     });
 
@@ -203,9 +201,7 @@ describe("PMClient", () => {
             group_id=8,
             null,
             null,
-            null,
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            null
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -230,9 +226,7 @@ describe("PMClient", () => {
             group_id=8,
             trigger_price=null,
             leg_no="2",
-            algo_order_no="4",
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            algo_order_no="4"
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -257,9 +251,7 @@ describe("PMClient", () => {
             group_id=8,
             null,
             leg_no="2",
-            null,
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            null
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -284,9 +276,7 @@ describe("PMClient", () => {
             group_id=8,
             trigger_price=9.8,
             leg_no=null,
-            algo_order_no=null,
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            algo_order_no=null
             )
         expect(order).toThrow(error.AttributeError)
     });
@@ -392,9 +382,7 @@ describe("PMClient", () => {
             product_to="I",
             security_id="2885",
             quantity=100,
-            mkt_type="NL",
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            mkt_type="NL"
             )
         expect(order).toThrow(error.ConnectionError)
     });

@@ -123,10 +123,8 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {number} profit_value 
      * @param {number} stoploss_value 
      * @param {number} trigger_price 
-     * @param {number} edis_txn_id 
-     * @param {String} edis_auth_mode 
      */
-    this.place_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,profit_value=null,stoploss_value=null,trigger_price=null, edis_txn_id=null, edis_auth_mode=null){
+    this.place_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,profit_value=null,stoploss_value=null,trigger_price=null){
         var order = {        
             'txn_type': txn_type, 
             'source' : source, 
@@ -146,13 +144,6 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
         }
-
-        //If placing sell CNC order
-        if (edis_txn_id != null && edis_auth_mode != null){
-            order['edis_txn_id'] = edis_txn_id;
-            order['edis_auth_mode'] = edis_auth_mode;
-        }
-
 
         //For Bracket Order
         if(product == 'B') {
@@ -190,11 +181,9 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {number} group_id 
      * @param {number} trigger_price
      * @param {number} leg_no 
-     * @param {number} algo_order_no 
-     * @param {number} edis_txn_id 
-     * @param {String} edis_auth_mode 
+     * @param {number} algo_order_no
      */
-    this.modify_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,mkt_type,order_no,serial_no,group_id,trigger_price=null,leg_no=null,algo_order_no=null, edis_txn_id=null, edis_auth_mode=null) {
+    this.modify_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,mkt_type,order_no,serial_no,group_id,trigger_price=null,leg_no=null,algo_order_no=null) {
         var order = {
             'txn_type': txn_type, 
             'source' : source, 
@@ -218,12 +207,6 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         //For modifying stop loss order or stop loss market order
         if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
-        }
-
-        //If modifying sell CNC order
-        if (edis_txn_id != null && edis_auth_mode != null){
-            order['edis_txn_id'] = edis_txn_id;
-            order['edis_auth_mode'] = edis_auth_mode;
         }
 
         // For Bracket Order
@@ -313,12 +296,10 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {String} product_from 
      * @param {String} product_to 
      * @param {number} quantity 
-     * @param {number} security_id 
-     * @param {number} edis_txn_id 
-     * @param {String} edis_auth_mode 
+     * @param {number} security_id
      * @returns 
      */
-    this.convert_order = function(source,txn_type,exchange,segment,mkt_type,product_from,product_to,quantity,security_id, edis_txn_id=null, edis_auth_mode=null){
+    this.convert_order = function(source,txn_type,exchange,segment,mkt_type,product_from,product_to,quantity,security_id){
         var order = {
             'source': source,
             'txn_type': txn_type,
@@ -329,12 +310,6 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'product_to':product_to,
             'quantity':quantity,
             'security_id':security_id
-        }
-        
-        //If modifying sell CNC order
-        if (edis_txn_id != null && edis_auth_mode != null){
-            order['edis_txn_id'] = edis_txn_id;
-            order['edis_auth_mode'] = edis_auth_mode;
         }
         return apiservice.apiCall('convert_regular','POST',order,null,null)
     }
