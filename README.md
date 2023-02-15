@@ -3,12 +3,14 @@
 The official NodeJS client for communicating with [PaytmMoney Equity API](https://www.paytmmoney.com/stocks/).
 
 PMClient is a set of REST-like APIs that expose many capabilities required to build a complete investment and
-trading platform. Execute orders in real time, manage user portfolio, and more, with the simple HTTP API collection.
+trading platform. Execute orders in real time, manage user portfolio, stream live market data (WebSockets), and more, with the simple HTTP API collection.
 
 [PaytmMoney Technology Pvt Ltd](https://www.paytmmoney.com/) (c) 2022. Licensed under the MIT License.
 
 
-## Documentation
+## Api Documentation
+
+- [PaytmMoney API documentation](https://developer.paytmmoney.com/docs/api/logout/)
 
 ## Usage
 ```javascript
@@ -59,10 +61,11 @@ pm.generate_session(request_token="your_request_token")
     });
 ```
 
-After generating the access_token/session any API can be called with same access_token/session.
+### To manually set the jwt tokens, 
 ```javascript
-// Set access Token if you have already. In this case, Don't need to call generateSession method.
-pm.set_access_token(access_token);
+pm.set_access_token("your_access_token")
+pm.set_public_access_token("your_public_access_token")
+pm.set_read_access_token("your_read_access_token")
 ```
 
 ### Place Order
@@ -302,3 +305,57 @@ pm.get_gtt_aggregate();
 pm.get_gtt_by_instruction_id(id);
 ```
 
+## WebSocket Usage
+
+```javascript
+const LivePriceWebSocket = require("../LivePriceWebSocket.js");
+let livePriceWebSocket = new LivePriceWebSocket();
+jwt = "your_public_access_token"
+
+customerPreferences = []
+
+preference = {
+        "actionType" : 'ADD', // 'ADD', 'REMOVE'
+        "modeType" : 'LTP', // 'LTP', 'FULL', 'QUOTE'
+        "scripType" : 'EQUITY', // 'ETF', 'FUTURE', 'INDEX', 'OPTION', 'EQUITY'
+        "exchangeType" : 'NSE', // 'BSE', 'NSE'
+        "scripId" : '3456'
+        }
+
+customerPreferences.push(preference)
+
+// send preferences via websocket once connection is open
+livePriceWebSocket.setOnOpenListener(() => {
+    livePriceWebSocket.subscribe(customerPreferences)
+})
+
+// this event gets triggered when connection is closed
+livePriceWebSocket.setOnCloseListener((code, reason) => {
+        console.log(" disconnected Code: " + code + " Reason: " + reason);
+})
+
+// this event gets triggered when response is received
+livePriceWebSocket.setOnMessageListener((arr) => {
+    printArray(arr)
+})
+
+// this event gets triggered when error occurs
+livePriceWebSocket.setOnErrorListener((err) => {
+    console.log(err)
+})
+
+// this method is called to create a websocket connection with broadcast server
+livePriceWebSocket.connect(jwt) //pass public_access_token
+
+// this method prints the response array received 
+function printArray(arr) {
+    console.log("data received from server: ");
+    arr.forEach((obj) => {
+        let tick = Object.keys(obj)
+        tick.forEach((key) => {
+            console.log(key + ":", obj[key])
+        })
+        console.log("\n")
+    })
+}
+```
