@@ -178,7 +178,7 @@ pm.funds_summary(config);
 ### Scrip Margin
 * Calculate Scrip Margin
 ```javascript
-pm.scrip_margin(source,margin_list=[]);
+pm.scrips_margin(source,margin_list=[]);
 ```
 
 ### Order Margin
@@ -200,7 +200,6 @@ pm.user_holdings_data();
 ```
 
 ### Security Master
-* Data will be provided in CSV format
 * User can filter by file_name
 * To get the supported fileName [API Doc for fileNames](https://developer.paytmmoney.com/docs/api/security-master/)
 ```javascript

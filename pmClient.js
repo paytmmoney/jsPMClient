@@ -1,5 +1,6 @@
 const apiservice = require('./apiService')
 const endpoints = require('./constants').endpoints
+const exception = require('./exception');
 
 /**
  * @classdesc
@@ -435,6 +436,9 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {String} exchange
      */
     this.security_master = function(file_name){
+        if (!file_name){
+            throw new exception.NotFoundError("File name should not be null or empty") 
+        }
         var path_params = {
             'file_name' : file_name
         }
