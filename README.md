@@ -302,11 +302,11 @@ pmClient.get_option_chain_config("symbol")
 ```
 
 ## WebSocket Usage
-
+* To use websocket client in your project, add below code in a js file -
 ```javascript
 const LivePriceWebSocket = require("../LivePriceWebSocket.js");
 let livePriceWebSocket = new LivePriceWebSocket();
-jwt = "your_public_access_token"
+jwt = "your_public_access_token" // enter your public access token here
 
 customerPreferences = []
 
@@ -317,6 +317,8 @@ preference = {
         "exchangeType" : 'NSE', // 'BSE', 'NSE'
         "scripId" : '3456'
         }
+
+// create as many preferences as you like as shown above and append them in customerPreferences array
 
 customerPreferences.push(preference)
 
