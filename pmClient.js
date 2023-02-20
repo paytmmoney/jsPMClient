@@ -10,6 +10,8 @@ const exception = require('./exception');
  * @param {String} api_key
  * @param {String} api_secret
  * @param {String} access_token 
+ * @param {String} public_access_token 
+ * @param {String} read_access_token 
  */
 var PMClient  = function(api_key, api_secret, access_token=null, public_access_token=null, read_access_token=null){
     if (api_key != null || undefined){

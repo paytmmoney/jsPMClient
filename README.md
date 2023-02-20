@@ -24,7 +24,7 @@ User needs to create an object of sdk and pass apiKey & apiSecretKey
 ```javascript
 // Initialize PMClient using apiKey, apiSecret.
 pm = PMClient(api_key="your_api_key", api_secret="your_api_secret");
-// Initialize PMClient using apiKey, apiSecret & access_token if user has already generated.
+// Initialize PMClient using apiKey, apiSecret & jwt tokens if user has already generated.
 pm = PMClient(api_key="your_api_key", api_secret="your_api_secret", access_token="access_token",public_access_token="public_access_token", read_access_token="read_access_token");
 ```
 
