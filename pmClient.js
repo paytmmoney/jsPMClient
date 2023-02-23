@@ -1,5 +1,6 @@
 const apiservice = require('./apiService')
 const endpoints = require('./constants').endpoints
+const exception = require('./exception');
 
 /**
  * @classdesc
@@ -9,8 +10,10 @@ const endpoints = require('./constants').endpoints
  * @param {String} api_key
  * @param {String} api_secret
  * @param {String} access_token 
+ * @param {String} public_access_token 
+ * @param {String} read_access_token 
  */
-var PMClient  = function(api_key, api_secret, access_token=null){
+var PMClient  = function(api_key, api_secret, access_token=null, public_access_token=null, read_access_token=null){
     if (api_key != null || undefined){
         this.api_key = api_key;
     } else {
@@ -22,7 +25,12 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         throw Error("api_secret cannot be null");
     }
     this.access_token = access_token;
-    
+    apiservice.access_token = access_token;
+    this.public_access_token = public_access_token;
+    apiservice.public_access_token = public_access_token;
+    this.read_access_token = read_access_token;
+    apiservice.read_access_token = read_access_token;
+
     /**
      * Set the access token 
      * @param {String} access_token 
@@ -31,6 +39,26 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         this.access_token = access_token;
         apiservice.access_token = access_token;
         return this.access_token;
+    }
+
+    /**
+     * Set the public access token 
+     * @param {String} public_access_token 
+     */
+    this.set_public_access_token = function (public_access_token) {
+        this.public_access_token = public_access_token;
+        apiservice.public_access_token = public_access_token;
+        return this.public_access_token;
+    }
+    
+    /**
+     * Set the read access token 
+     * @param {String} read_access_token 
+     */
+    this.set_read_access_token = function (read_access_token) {
+        this.read_access_token = read_access_token;
+        apiservice.read_access_token = read_access_token;
+        return this.read_access_token;
     }
 
     /**
@@ -46,26 +74,25 @@ var PMClient  = function(api_key, api_secret, access_token=null){
     }
 
     /**
-     * Generate session and get the access_token
+     * Generate session and get the tokens
      * @param {String} request_token 
      */
     this.generate_session = async function (request_token) {
-        var order = {
-            merchantSecret : api_secret
+        var request_body = {
+            'api_key':this.api_key,
+            'api_secret_key':this.api_secret,
+            'request_token':request_token
         }
-        var query_param = {
-            requestToken : request_token,
-            apiKey : api_key,
-        }
-        var token = await apiservice.apiCall('access_token', 'POST', order, query_param, null)
+        var token = await apiservice.apiCall('access_token', 'POST', request_body, null, null)
 
         const res = JSON.parse(token);
 
         if (token) {
-            this.set_access_token(res['data']);
+            this.set_access_token(res['access_token']);
+            this.set_public_access_token(res['public_access_token']);
+            this.set_read_access_token(res['read_access_token']);
         }
-
-        return res['data'];
+        return res;
     }
 
     /**
@@ -99,10 +126,8 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {number} profit_value 
      * @param {number} stoploss_value 
      * @param {number} trigger_price 
-     * @param {number} edis_txn_id 
-     * @param {String} edis_auth_mode 
      */
-    this.place_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,profit_value=null,stoploss_value=null,trigger_price=null, edis_txn_id=null, edis_auth_mode=null){
+    this.place_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,profit_value=null,stoploss_value=null,trigger_price=null){
         var order = {        
             'txn_type': txn_type, 
             'source' : source, 
@@ -122,13 +147,6 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
         }
-
-        //If placing sell CNC order
-        if (edis_txn_id != null && edis_auth_mode != null){
-            order['edis_txn_id'] = edis_txn_id;
-            order['edis_auth_mode'] = edis_auth_mode;
-        }
-
 
         //For Bracket Order
         if(product == 'B') {
@@ -166,11 +184,9 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {number} group_id 
      * @param {number} trigger_price
      * @param {number} leg_no 
-     * @param {number} algo_order_no 
-     * @param {number} edis_txn_id 
-     * @param {String} edis_auth_mode 
+     * @param {number} algo_order_no
      */
-    this.modify_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,mkt_type,order_no,serial_no,group_id,trigger_price=null,leg_no=null,algo_order_no=null, edis_txn_id=null, edis_auth_mode=null) {
+    this.modify_order = function(txn_type,source,exchange,segment,product,security_id,quantity,validity,order_type,price,off_mkt_flag=false,mkt_type,order_no,serial_no,group_id,trigger_price=null,leg_no=null,algo_order_no=null) {
         var order = {
             'txn_type': txn_type, 
             'source' : source, 
@@ -194,12 +210,6 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         //For modifying stop loss order or stop loss market order
         if (order_type == "SLM" || order_type == "SL"){
             order['trigger_price'] = trigger_price;
-        }
-
-        //If modifying sell CNC order
-        if (edis_txn_id != null && edis_auth_mode != null){
-            order['edis_txn_id'] = edis_txn_id;
-            order['edis_auth_mode'] = edis_auth_mode;
         }
 
         // For Bracket Order
@@ -289,12 +299,10 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} product_from 
      * @param {String} product_to 
      * @param {number} quantity 
-     * @param {number} security_id 
-     * @param {number} edis_txn_id 
-     * @param {String} edis_auth_mode 
+     * @param {number} security_id
      * @returns 
      */
-    this.convert_order = function(source,txn_type,exchange,segment,mkt_type,product_from,product_to,quantity,security_id, edis_txn_id=null, edis_auth_mode=null){
+    this.convert_order = function(source,txn_type,exchange,segment,mkt_type,product_from,product_to,quantity,security_id){
         var order = {
             'source': source,
             'txn_type': txn_type,
@@ -305,12 +313,6 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'product_to':product_to,
             'quantity':quantity,
             'security_id':security_id
-        }
-        
-        //If modifying sell CNC order
-        if (edis_txn_id != null && edis_auth_mode != null){
-            order['edis_txn_id'] = edis_txn_id;
-            order['edis_auth_mode'] = edis_auth_mode;
         }
         return apiservice.apiCall('convert_regular','POST',order,null,null)
     }
@@ -435,26 +437,14 @@ var PMClient  = function(api_key, api_secret, access_token=null){
      * @param {String} scrip_type
      * @param {String} exchange
      */
-    this.security_master = function(scrip_type=null, exchange=null){
-        if (scrip_type!=null && scrip_type!="" && exchange!=null && exchange!=""){
-            var params = {
-                'scrip_type': scrip_type,
-                'exchange': exchange
-            }
-            return apiservice.apiCall('security_master','GET',null,params,null)
-        } else if ((scrip_type!=null && scrip_type!="") && (exchange==null || exchange=="")) {
-            var params = {
-                'scrip_type': scrip_type
-            }
-            return apiservice.apiCall('security_master','GET',null,params,null)
-        } else if ((scrip_type==null || scrip_type=="") && (exchange!=null && exchange!="")) {
-            var params = {
-                'exchange': exchange
-            }
-            return apiservice.apiCall('security_master','GET',null,params,null)
-        } else {
-            return apiservice.apiCall('security_master','GET',null,null,null)
+    this.security_master = function(file_name){
+        if (!file_name){
+            throw new exception.NotFoundError("File name should not be null or empty") 
         }
+        var path_params = {
+            'file_name' : file_name
+        }
+        return apiservice.apiCall('security_master','GET',null,null,path_params)
     }
 
     /**
@@ -488,26 +478,26 @@ var PMClient  = function(api_key, api_secret, access_token=null){
         return apiservice.apiCall('status','GET',null,params,null)
     }
 
-    /**
-     * Historical data
-     * @
-     */
-    this.price_chart_sym = function(cont, exchange, expiry, from_date, inst_type, interval, symbol, to_date, month_id=null, series=null, strike=null){
-        var order = {
-            'cont': cont,
-            'exchange': exchange,
-            'expiry': expiry,
-            'fromDate': from_date,
-            'instType': inst_type,
-            'interval': interval,
-            'monthId': month_id,
-            'series': series,
-            'strike': strike,
-            'symbol': symbol,
-            'toDate': to_date
-        }
-        return apiservice.apiCall('price_chart_sym','POST',order,null,null)
-    }
+    // /**
+    //  * Historical data
+    //  * @
+    //  */
+    // this.price_chart_sym = function(cont, exchange, expiry, from_date, inst_type, interval, symbol, to_date, month_id=null, series=null, strike=null){
+    //     var order = {
+    //         'cont': cont,
+    //         'exchange': exchange,
+    //         'expiry': expiry,
+    //         'fromDate': from_date,
+    //         'instType': inst_type,
+    //         'interval': interval,
+    //         'monthId': month_id,
+    //         'series': series,
+    //         'strike': strike,
+    //         'symbol': symbol,
+    //         'toDate': to_date
+    //     }
+    //     return apiservice.apiCall('price_chart_sym','POST',order,null,null)
+    // }
 
     /**
      * Get GTT by status or pml_id
@@ -665,6 +655,47 @@ var PMClient  = function(api_key, api_secret, access_token=null){
             'id' : id
         }
         return apiservice.apiCall('gtt_by_instruction_id','GET',null,null,path_params)
+    }
+
+    /**
+     * Live Market Data
+     * @param {String} mode_type
+     * @param {String} exchange
+     * @param {String} scrip_id
+     * @param {String} scrip_type
+     */
+    this.get_live_market_data = function(mode_type, exchange, scrip_id, scrip_type){
+        var path_params = {
+            'mode_type': mode_type,
+            'prefrences': exchange+":"+scrip_id+":"+scrip_type
+        }
+        return apiservice.apiCall('live_market_data','GET',null,null,path_params)
+    }
+
+    /**
+     * Option Chain
+     * @param {String} type
+     * @param {String} symbol
+     * @param {String} expiry
+     */
+        this.get_option_chain = function(type, symbol, expiry){
+            var path_params = {
+                'type': type,
+                'symbol': symbol,
+                'expiry':expiry
+            }
+            return apiservice.apiCall('option_chain','GET',null,null,path_params)
+        }
+
+    /**
+     * Option Chain Config
+     * @param {String} symbol
+     */
+    this.get_option_chain_config = function(symbol){
+        var path_params = {
+            'symbol': symbol
+        }
+        return apiservice.apiCall('option_chain_config','GET',null,null,path_params)
     }
 }
 
