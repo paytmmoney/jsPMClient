@@ -7,13 +7,12 @@ const exception = require('./exception');
 this.apiCall = function(api,http_method,payload=null,params=null,path_param=null){
     var request_body = JSON.stringify(payload);               //converts the arguments to JSON form
     var query_param = querystring.stringify(params);          //converts the arguments to query_param
-    var url = endpoints['host']+endpoints[api];
+    var url = endpoints['host']+endpoints[api][0];
     if (path_param != null) {
         for(var key in path_param) {
             url = url.replace("{"+key+"}", path_param[key])
         }
     }
-    
     if (params != null){
         url = url+'?'+query_param;   
     }
@@ -28,11 +27,23 @@ this.apiCall = function(api,http_method,payload=null,params=null,path_param=null
     if (payload == null){
         delete options["body"];
     }
-
-    options['headers']['x-jwt-token'] = this.access_token
-    
-    if (url.includes('security_master')){                                     //setting the Content-Type if data is in CSV form
-        options['headers']['Content-Type'] = 'application/vnd.ms-excel';   
+    options['headers']['x-jwt-token'] = validate_token(api,this.access_token,this.public_access_token,this.read_access_token);
+    function validate_token(api,access_token,public_access_token,read_access_token){
+        var tokens = endpoints[api][1];
+        var jwt_token = null
+        if (access_token && tokens.includes('access_token')){
+            jwt_token = access_token
+        }
+        if (public_access_token && tokens.includes('public_access_token')){
+            jwt_token = public_access_token
+        }
+        if (read_access_token && tokens.includes('read_access_token')){
+            jwt_token = read_access_token
+        }
+        if (tokens.length>0 && jwt_token == null){
+            throw new exception.NotFoundError("Token is invalid") 
+        }
+        return jwt_token
     }
 
     //request method to call the apis

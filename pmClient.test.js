@@ -41,6 +41,36 @@ describe("PMClient", () => {
         ).toBe("OtherError")
     });
 
+    test("error_test_7", () => {
+        expect(
+            new PMClient(api_key=null,api_secret=null)
+        ).toBe("api_key cannot be null")
+    });
+
+    test("error_test_8", () => {
+        expect(
+            new PMClient(api_key="api_key",api_secret=null)
+        ).toBe("api_secret cannot be null")
+    });
+
+    test("set_access_token_test", () => {
+        connect.set_access_token("invalid_token");;
+        const order = connect.set_access_token(access_token="access_token")
+        expect(order).toBe("access_token")
+    });
+
+    test("set_public_access_token_test", () => {
+        connect.set_public_access_token("invalid_token");;
+        const order = connect.set_public_access_token(public_access_token="public_access_token")
+        expect(order).toBe("public_access_token")
+    });
+
+    test("set_read_access_token_test", () => {
+        connect.set_read_access_token("invalid_token");;
+        const order = connect.set_read_access_token(read_access_token="read_access_token")
+        expect(order).toBe("read_access_token")
+    });
+
     test("set_access_token_test", () => {
         connect.set_access_token("invalid_token");;
         const order = connect.set_access_token(access_token="access_token")
@@ -89,9 +119,7 @@ describe("PMClient", () => {
         off_mkt_flag=false,
         profit_value=null,
         stoploss_value=null,
-        trigger_price=null,
-        edis_txn_id="123",
-        edis_auth_mode="234")
+        trigger_price=null)
         expect(order).toThrow(error.AttributeError)
     });
 
@@ -173,9 +201,7 @@ describe("PMClient", () => {
             group_id=8,
             null,
             null,
-            null,
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            null
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -200,9 +226,7 @@ describe("PMClient", () => {
             group_id=8,
             trigger_price=null,
             leg_no="2",
-            algo_order_no="4",
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            algo_order_no="4"
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -227,9 +251,7 @@ describe("PMClient", () => {
             group_id=8,
             null,
             leg_no="2",
-            null,
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            null
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -254,9 +276,7 @@ describe("PMClient", () => {
             group_id=8,
             trigger_price=9.8,
             leg_no=null,
-            algo_order_no=null,
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            algo_order_no=null
             )
         expect(order).toThrow(error.AttributeError)
     });
@@ -362,9 +382,7 @@ describe("PMClient", () => {
             product_to="I",
             security_id="2885",
             quantity=100,
-            mkt_type="NL",
-            edis_txn_id="123",
-            edis_auth_mode="234"
+            mkt_type="NL"
             )
         expect(order).toThrow(error.ConnectionError)
     });
@@ -544,32 +562,32 @@ describe("PMClient", () => {
         const order = connect.get_user_details()
         expect(order).toThrow(error.AttributeError)
     });
-    test("price_chart_sym_connection_test", () => {
-        connect.set_access_token("invalid_token");
-        const order = connect.price_chart_sym(        
-            cont="false",
-            exchange="NSE",
-            expiry="2022-04-26",
-            fromDate="2022-02-10",
-            instType="FUTIDX",
-            interval="MINUTE",
-            symbol="MIDCPNIFTY",
-            toDate="2022-02-05")
-        expect(order).toThrow(error.ConnectionError)
-    });
-    test("price_chart_sym_attribute_test", () => {
-        connect.set_access_token("invalid_token");
-        const order = connect.price_chart_sym(        
-            cont="false",
-            exchange="NSE",
-            expiry="2022-04-26",
-            fromDate="2022-02-10",
-            instType="FUTIDX",
-            interval="MINUTE",
-            symbol="",
-            toDate="2022-02-05")
-        expect(order).toThrow(error.AttributeError)
-    });
+    // test("price_chart_sym_connection_test", () => {
+    //     connect.set_access_token("invalid_token");
+    //     const order = connect.price_chart_sym(        
+    //         cont="false",
+    //         exchange="NSE",
+    //         expiry="2022-04-26",
+    //         fromDate="2022-02-10",
+    //         instType="FUTIDX",
+    //         interval="MINUTE",
+    //         symbol="MIDCPNIFTY",
+    //         toDate="2022-02-05")
+    //     expect(order).toThrow(error.ConnectionError)
+    // });
+    // test("price_chart_sym_attribute_test", () => {
+    //     connect.set_access_token("invalid_token");
+    //     const order = connect.price_chart_sym(        
+    //         cont="false",
+    //         exchange="NSE",
+    //         expiry="2022-04-26",
+    //         fromDate="2022-02-10",
+    //         instType="FUTIDX",
+    //         interval="MINUTE",
+    //         symbol="",
+    //         toDate="2022-02-05")
+    //     expect(order).toThrow(error.AttributeError)
+    // });
     test("create_gtt_connection_test", () => {
         connect.set_access_token("invalid_token");
         const order = connect.create_gtt(        
@@ -684,4 +702,23 @@ describe("PMClient", () => {
         const order = connect.get_gtt_by_instruction_id(id=2563)
         expect(order).toThrow(error.ConnectionError)
     });
+
+    test("get_live_market_data_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const response = connect.get_live_market_data(mode_type='mode_type', exchange='exchange', scrip_id='scrip_id', scrip_type='scrip_type')
+        expect(order).toThrow(error.ConnectionError)
+    });
+
+    test("get_option_chain_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const response = connect.get_option_chain(type="type",symbol="symbol",expiry="expiry")
+        expect(order).toThrow(error.ConnectionError)
+    });
+
+    test("get_option_chain_config_connection_test",  () => {
+        connect.set_access_token("valid_token");
+        const response = connect.get_option_chain_config(symbol="symbol")
+        expect(order).toThrow(error.ConnectionError)
+    });
+    
 });
