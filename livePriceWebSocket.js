@@ -119,8 +119,8 @@ const utils = require('./utils');
 
             function processLtpPacket() {
                 response.push({
-                     LTP: dvu.getFloat32(position, true).toFixed(2),
-                     LTT: utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                     last_price: dvu.getFloat32(position, true).toFixed(2),
+                     last_trade_time: utils.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -132,8 +132,8 @@ const utils = require('./utils');
 
             function processIndexLtpPacket() {
                 response.push({
-                     LTP: dvu.getFloat32(position, true).toFixed(2),
-                     LTT: utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                     last_price: dvu.getFloat32(position, true).toFixed(2),
+                     last_update_time: utils.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -145,8 +145,8 @@ const utils = require('./utils');
 
             function processQuotePacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
-                    LTT: utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
+                    last_trade_time: utils.EpochConverter(dvu.getInt32(position + 4, true)),
                     security_id: dvu.getInt32(position + 8, true),
                     tradable: dvu.getInt8(position + 12, true),
                     mode: dvu.getInt8(position + 13, true),
@@ -169,7 +169,7 @@ const utils = require('./utils');
 
             function processIndexQuotePacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
                     security_id: dvu.getInt32(position + 4, true),
                     tradable: dvu.getInt8(position + 8, true),
                     mode: dvu.getInt8(position + 9, true),
@@ -203,8 +203,8 @@ const utils = require('./utils');
                 tick.depthPacket = depthPacket
                 position += 100
 
-                tick.LTP = dvu.getFloat32(position, true).toFixed(2),
-                tick.last_traded_time = utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                tick.last_price = dvu.getFloat32(position, true).toFixed(2),
+                tick.last_trade_time = utils.EpochConverter(dvu.getInt32(position + 4, true)),
                 tick.security_id = dvu.getInt32(position + 8, true),
                 tick.tradable = dvu.getInt8(position + 12, true),
                 tick.mode = dvu.getInt8(position + 13, true), 
@@ -231,7 +231,7 @@ const utils = require('./utils');
 
             function processIndexFullPacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
                     security_id: dvu.getInt32(position + 4, true),
                     tradable: dvu.getInt8(position + 8, true),
                     mode: dvu.getInt8(position + 9, true),
