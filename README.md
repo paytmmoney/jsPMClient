@@ -286,7 +286,7 @@ pm.get_gtt_by_instruction_id(id);
 ### Get Live Price via API
 * To Get Live Price Data via API
 ```javascript
-pmClient.get_live_market_data("mode", "prefrences")
+pmClient.get_live_market_data("mode", preferences)
 ```
 
 ### Get Option Chain

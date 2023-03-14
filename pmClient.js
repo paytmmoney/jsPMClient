@@ -661,13 +661,13 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
     /**
      * Live Market Data
      * @param {String} mode_type
-     * @param {String} prefrences
+     * @param {String} preferences
      */
-    this.get_live_market_data = function(mode_type, prefrences){
+    this.get_live_market_data = function(mode_type, preferences){
 
         var path_params = {
             'mode_type': mode_type,
-            'prefrences': prefrences
+            'preferences': preferences
         }
         response = apiservice.apiCall('live_market_data','GET',null,null,path_params).then(
             function(response){
