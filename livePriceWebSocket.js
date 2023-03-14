@@ -1,6 +1,6 @@
 let WebSocket = require("ws");
 const endpoints = require('./constants').endpoints;
-const utils = require('./utils');
+const epochConverterUtil = require('./epochConverterUtil');
 
 /**
  * This class handles websocket connection required for streaming live price of stocks.
@@ -120,7 +120,7 @@ const utils = require('./utils');
             function processLtpPacket() {
                 response.push({
                      last_price: dvu.getFloat32(position, true).toFixed(2),
-                     last_trade_time: utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                     last_trade_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -133,7 +133,7 @@ const utils = require('./utils');
             function processIndexLtpPacket() {
                 response.push({
                      last_price: dvu.getFloat32(position, true).toFixed(2),
-                     last_update_time: utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                     last_update_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -146,7 +146,7 @@ const utils = require('./utils');
             function processQuotePacket() {
                 response.push({
                     last_price: dvu.getFloat32(position, true).toFixed(2),
-                    last_trade_time: utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                    last_trade_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                     security_id: dvu.getInt32(position + 8, true),
                     tradable: dvu.getInt8(position + 12, true),
                     mode: dvu.getInt8(position + 13, true),
@@ -204,7 +204,7 @@ const utils = require('./utils');
                 position += 100
 
                 tick.last_price = dvu.getFloat32(position, true).toFixed(2),
-                tick.last_trade_time = utils.EpochConverter(dvu.getInt32(position + 4, true)),
+                tick.last_trade_time = epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                 tick.security_id = dvu.getInt32(position + 8, true),
                 tick.tradable = dvu.getInt8(position + 12, true),
                 tick.mode = dvu.getInt8(position + 13, true), 
@@ -241,7 +241,7 @@ const utils = require('./utils');
                     low: dvu.getFloat32(position + 22, true).toFixed(2), 
                     change_percent: dvu.getFloat32(position + 26, true).toFixed(2), 
                     change_absolute: dvu.getFloat32(position + 30, true).toFixed(2),
-                    last_update_time: utils.EpochConverter(dvu.getInt32(position + 34, true)),
+                    last_update_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 34, true)),
                 });
                 position = position + 38;
             }
