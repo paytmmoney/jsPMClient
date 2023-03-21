@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.75% </span>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>71/80</span>
+                <span class='fraction'>72/81</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.31% </span>
+                <span class="strong">88.46% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>68/77</span>
+                <span class='fraction'>69/78</span>
             </div>
         
             
@@ -314,7 +314,9 @@
 <a name='L249'></a><a href='#L249'>249</a>
 <a name='L250'></a><a href='#L250'>250</a>
 <a name='L251'></a><a href='#L251'>251</a>
-<a name='L252'></a><a href='#L252'>252</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -567,6 +569,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">let WebSocket = require("ws");
 const endpoints = require('./constants').endpoints;
+const epochConverterUtil = require('./epochConverterUtil');
 &nbsp;
 /**
  * This class handles websocket connection required for streaming live price of stocks.
@@ -685,8 +688,8 @@ const endpoints = require('./constants').endpoints;
 &nbsp;
             function processLtpPacket() {
                 response.push({
-                     LTP: dvu.getFloat32(position, true).toFixed(2),
-                     LTT: dvu.getInt32(position + 4, true),
+                     last_price: dvu.getFloat32(position, true).toFixed(2),
+                     last_trade_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -698,8 +701,8 @@ const endpoints = require('./constants').endpoints;
 &nbsp;
             function processIndexLtpPacket() {
                 response.push({
-                     LTP: dvu.getFloat32(position, true).toFixed(2),
-                     LTT: dvu.getInt32(position + 4, true),
+                     last_price: dvu.getFloat32(position, true).toFixed(2),
+                     last_update_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -711,8 +714,8 @@ const endpoints = require('./constants').endpoints;
 &nbsp;
             function processQuotePacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
-                    LTT: dvu.getInt32(position + 4, true),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
+                    last_trade_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                     security_id: dvu.getInt32(position + 8, true),
                     tradable: dvu.getInt8(position + 12, true),
                     mode: dvu.getInt8(position + 13, true),
@@ -735,7 +738,7 @@ const endpoints = require('./constants').endpoints;
 &nbsp;
             function processIndexQuotePacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
                     security_id: dvu.getInt32(position + 4, true),
                     tradable: dvu.getInt8(position + 8, true),
                     mode: dvu.getInt8(position + 9, true),
@@ -757,20 +760,20 @@ const endpoints = require('./constants').endpoints;
                 for (let i = 0; i &lt; 5; i++) {
                     let depth = "depth_packet_#" + (i + 1);
                     let depthObj = {}  
-                    depthObj.buy_quantity = dvu.getInt32(1 + (i * depth_size), true); 
-                    depthObj.sell_quantity = dvu.getInt32(5 + (i * depth_size), true); 
-                    depthObj.buy_order = dvu.getInt16(9 + (i * depth_size), true); 
-                    depthObj.sell_order = dvu.getInt16(11 + (i * depth_size), true); 
-                    depthObj.buy_price = dvu.getFloat32(13 + (i * depth_size), true).toFixed(2); 
-                    depthObj.sell_price = dvu.getFloat32(17 + (i * depth_size), true).toFixed(2);  
+                    depthObj.buy_quantity = dvu.getInt32(position + (i * depth_size), true); 
+                    depthObj.sell_quantity = dvu.getInt32(position + 4 + (i * depth_size), true); 
+                    depthObj.buy_order = dvu.getInt16(position + 8 + (i * depth_size), true); 
+                    depthObj.sell_order = dvu.getInt16(position + 10 + (i * depth_size), true); 
+                    depthObj.buy_price = dvu.getFloat32(position + 12 + (i * depth_size), true).toFixed(2); 
+                    depthObj.sell_price = dvu.getFloat32(position + 16 + (i * depth_size), true).toFixed(2);  
                     depthPacket[depth] = depthObj;
                 }
                 let tick = {}
                 tick.depthPacket = depthPacket
                 position += 100
 &nbsp;
-                tick.LTP = dvu.getFloat32(position, true).toFixed(2),
-                tick.last_traded_time = dvu.getInt32(position + 4, true),
+                tick.last_price = dvu.getFloat32(position, true).toFixed(2),
+                tick.last_trade_time = epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                 tick.security_id = dvu.getInt32(position + 8, true),
                 tick.tradable = dvu.getInt8(position + 12, true),
                 tick.mode = dvu.getInt8(position + 13, true), 
@@ -797,7 +800,7 @@ const endpoints = require('./constants').endpoints;
 &nbsp;
             function processIndexFullPacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
                     security_id: dvu.getInt32(position + 4, true),
                     tradable: dvu.getInt8(position + 8, true),
                     mode: dvu.getInt8(position + 9, true),
@@ -807,7 +810,7 @@ const endpoints = require('./constants').endpoints;
                     low: dvu.getFloat32(position + 22, true).toFixed(2), 
                     change_percent: dvu.getFloat32(position + 26, true).toFixed(2), 
                     change_absolute: dvu.getFloat32(position + 30, true).toFixed(2),
-                    last_trade_time: dvu.getInt32(position + 34, true),
+                    last_update_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 34, true)),
                 });
                 position = position + 38;
             }
@@ -823,7 +826,7 @@ module.exports = LivePriceWebSocket;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Feb 07 2023 21:16:34 GMT+0530 (India Standard Time)
+                at 2023-03-21T16:38:09.518Z
             </div>
         <script src="prettify.js"></script>
         <script>
