@@ -84,9 +84,10 @@ describe("PMClient", () => {
             "public_access_token": "def",
             "read_access_token": "ghi"
         };
-        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue(token);
-        connect.generate_session
-    myMethodMock.mockRestore();
+        jsonString = JSON.stringify(token)
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue(jsonString);
+        connect.generate_session("request_token");
+        myMethodMock.mockRestore();
     });
     
     test("logout_test", () => {
@@ -109,6 +110,12 @@ describe("PMClient", () => {
         ).toThrow(Error)
     })
 
+    test("security_master_connection_test_1",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue('custom value');
+        expect(() =>
+            connect.security_master()
+        ).toThrow(error.NotFoundError)
+    });
 
     test("place_order_attribute_test", () => {
         const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue('custom value');
@@ -651,7 +658,6 @@ describe("PMClient", () => {
         
     });
 
-    // TODO
     // test("get_live_market_data_connection_test",  () => {
     //     response = {
     //         "data": [
@@ -662,7 +668,7 @@ describe("PMClient", () => {
     //         ]
     //     };
     //     const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue(response);
-    //     const res = connect.get_live_market_data(mode_type='mode_type', exchange='exchange', scrip_id='scrip_id', scrip_type='scrip_type')
+    //     const res = connect.get_live_market_data(mode_type='mode_type', preferences='preferences')
     // });
 
     test("get_option_chain_connection_test",  () => {
