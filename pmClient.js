@@ -1,6 +1,7 @@
 const apiservice = require('./apiService')
 const endpoints = require('./constants').endpoints
 const exception = require('./exception');
+const utils = require('./epochConverterUtil');
 
 /**
  * @classdesc
@@ -660,16 +661,29 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
     /**
      * Live Market Data
      * @param {String} mode_type
-     * @param {String} exchange
-     * @param {String} scrip_id
-     * @param {String} scrip_type
+     * @param {String} preferences
      */
-    this.get_live_market_data = function(mode_type, exchange, scrip_id, scrip_type){
+    this.get_live_market_data = function(mode_type, preferences){
+
         var path_params = {
             'mode_type': mode_type,
-            'prefrences': exchange+":"+scrip_id+":"+scrip_type
+            'preferences': preferences
         }
-        return apiservice.apiCall('live_market_data','GET',null,null,path_params)
+        response = apiservice.apiCall('live_market_data','GET',null,null,path_params).then(
+            function(response){
+                response = JSON.parse(response)
+                for (var tick in response['data']) {
+                    if (response['data'][tick]['last_trade_time'] != null) {
+                        response['data'][tick]['last_trade_time'] = utils.EpochConverter(response['data'][tick]['last_trade_time'])
+                    }
+                    if (response['data'][tick]['last_update_time'] != null) {
+                        response['data'][tick]['last_update_time'] = utils.EpochConverter(response['data'][tick]['last_update_time'])
+                    }
+                }
+                return JSON.stringify(response)
+            }
+        )
+        return response
     }
 
     /**

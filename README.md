@@ -1,4 +1,4 @@
-# The Paytm Money Equity 1.1.0 API NodeJS client
+# The Paytm Money Equity 1.1.1 API NodeJS client
 
 The official NodeJS client for communicating with [PaytmMoney Equity API](https://www.paytmmoney.com/stocks/).
 
@@ -286,7 +286,7 @@ pm.get_gtt_by_instruction_id(id);
 ### Get Live Price via API
 * To Get Live Price Data via API
 ```javascript
-pmClient.get_live_market_data("mode", "exchange", "scripId", "scripType")
+pmClient.get_live_market_data("mode", preferences)
 ```
 
 ### Get Option Chain
