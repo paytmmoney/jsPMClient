@@ -1,5 +1,6 @@
 let WebSocket = require("ws");
 const endpoints = require('./constants').endpoints;
+const epochConverterUtil = require('./epochConverterUtil');
 
 /**
  * This class handles websocket connection required for streaming live price of stocks.
@@ -118,8 +119,8 @@ const endpoints = require('./constants').endpoints;
 
             function processLtpPacket() {
                 response.push({
-                     LTP: dvu.getFloat32(position, true).toFixed(2),
-                     LTT: dvu.getInt32(position + 4, true),
+                     last_price: dvu.getFloat32(position, true).toFixed(2),
+                     last_trade_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -131,8 +132,8 @@ const endpoints = require('./constants').endpoints;
 
             function processIndexLtpPacket() {
                 response.push({
-                     LTP: dvu.getFloat32(position, true).toFixed(2),
-                     LTT: dvu.getInt32(position + 4, true),
+                     last_price: dvu.getFloat32(position, true).toFixed(2),
+                     last_update_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                      security_id: dvu.getInt32(position + 8, true),
                      tradable: dvu.getInt8(position + 12, true),
                      mode: dvu.getInt8(position + 13, true),
@@ -144,8 +145,8 @@ const endpoints = require('./constants').endpoints;
 
             function processQuotePacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
-                    LTT: dvu.getInt32(position + 4, true),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
+                    last_trade_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                     security_id: dvu.getInt32(position + 8, true),
                     tradable: dvu.getInt8(position + 12, true),
                     mode: dvu.getInt8(position + 13, true),
@@ -168,7 +169,7 @@ const endpoints = require('./constants').endpoints;
 
             function processIndexQuotePacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
                     security_id: dvu.getInt32(position + 4, true),
                     tradable: dvu.getInt8(position + 8, true),
                     mode: dvu.getInt8(position + 9, true),
@@ -190,20 +191,20 @@ const endpoints = require('./constants').endpoints;
                 for (let i = 0; i < 5; i++) {
                     let depth = "depth_packet_#" + (i + 1);
                     let depthObj = {}  
-                    depthObj.buy_quantity = dvu.getInt32(1 + (i * depth_size), true); 
-                    depthObj.sell_quantity = dvu.getInt32(5 + (i * depth_size), true); 
-                    depthObj.buy_order = dvu.getInt16(9 + (i * depth_size), true); 
-                    depthObj.sell_order = dvu.getInt16(11 + (i * depth_size), true); 
-                    depthObj.buy_price = dvu.getFloat32(13 + (i * depth_size), true).toFixed(2); 
-                    depthObj.sell_price = dvu.getFloat32(17 + (i * depth_size), true).toFixed(2);  
+                    depthObj.buy_quantity = dvu.getInt32(position + (i * depth_size), true); 
+                    depthObj.sell_quantity = dvu.getInt32(position + 4 + (i * depth_size), true); 
+                    depthObj.buy_order = dvu.getInt16(position + 8 + (i * depth_size), true); 
+                    depthObj.sell_order = dvu.getInt16(position + 10 + (i * depth_size), true); 
+                    depthObj.buy_price = dvu.getFloat32(position + 12 + (i * depth_size), true).toFixed(2); 
+                    depthObj.sell_price = dvu.getFloat32(position + 16 + (i * depth_size), true).toFixed(2);  
                     depthPacket[depth] = depthObj;
                 }
                 let tick = {}
                 tick.depthPacket = depthPacket
                 position += 100
 
-                tick.LTP = dvu.getFloat32(position, true).toFixed(2),
-                tick.last_traded_time = dvu.getInt32(position + 4, true),
+                tick.last_price = dvu.getFloat32(position, true).toFixed(2),
+                tick.last_trade_time = epochConverterUtil.EpochConverter(dvu.getInt32(position + 4, true)),
                 tick.security_id = dvu.getInt32(position + 8, true),
                 tick.tradable = dvu.getInt8(position + 12, true),
                 tick.mode = dvu.getInt8(position + 13, true), 
@@ -230,7 +231,7 @@ const endpoints = require('./constants').endpoints;
 
             function processIndexFullPacket() {
                 response.push({
-                    LTP: dvu.getFloat32(position, true).toFixed(2),
+                    last_price: dvu.getFloat32(position, true).toFixed(2),
                     security_id: dvu.getInt32(position + 4, true),
                     tradable: dvu.getInt8(position + 8, true),
                     mode: dvu.getInt8(position + 9, true),
@@ -240,7 +241,7 @@ const endpoints = require('./constants').endpoints;
                     low: dvu.getFloat32(position + 22, true).toFixed(2), 
                     change_percent: dvu.getFloat32(position + 26, true).toFixed(2), 
                     change_absolute: dvu.getFloat32(position + 30, true).toFixed(2),
-                    last_trade_time: dvu.getInt32(position + 34, true),
+                    last_update_time: epochConverterUtil.EpochConverter(dvu.getInt32(position + 34, true)),
                 });
                 position = position + 38;
             }
