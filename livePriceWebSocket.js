@@ -53,12 +53,12 @@ const epochConverterUtil = require('./epochConverterUtil');
             this.onCloseListener(code, reason);
         })
 
-        this.socket.on('message', (packet) => {
-            if(typeof packet === "string")
+        this.socket.onmessage = function(packet) {
+            if(typeof packet.data === "string")
                 this.onErrorListener(packet); // to handle error message sent by server
             else
                 this.onMessageListener(this.parseBinary(packet)) // to handle ByteBuffer packets sent by server
-        })
+        };
 
         this.socket.on('error', (err) => {
             this.onErrorListener(err)

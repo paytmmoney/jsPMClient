@@ -327,6 +327,13 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
     }
 
     /**
+     * All Orders
+     */
+    this.orders = function(){
+        return apiservice.apiCall('orders', 'GET', null, null,null)
+    }
+
+    /**
      * Trade Details
      * @param {number} order_no 
      * @param {number} leg_no 
