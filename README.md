@@ -342,8 +342,17 @@ livePriceWebSocket.setOnErrorListener((err) => {
     console.log(err)
 })
 
+/**
+ *  set this config if reconnect feature is desired
+ * Set first param as true and second param, the no. of times retry to connect to server shall be made  
+ */
+livePriceWebSocket.setReconnectConfig(true, 5);
+
 // this method is called to create a websocket connection with broadcast server
 livePriceWebSocket.connect(jwt) //pass public_access_token
+
+// To explicitly close websocket connection with server, call this method
+livePriceWebSocket.disconnect()
 
 // this method prints the response array received 
 function printArray(arr) {
