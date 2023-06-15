@@ -76,8 +76,8 @@ const epochConverterUtil = require('./epochConverterUtil');
             this.errorCode = null;
         })
 
-        this.socket.on('message', (packet)  => {
-            if(typeof packet.data === "string")
+        this.socket.on('message' ,(packet) => {
+            if(typeof packet === "string") 
                 this.onErrorListener(packet); // to handle error message sent by server
             else
                 this.onMessageListener(this.parseBinary(packet)) // to handle ByteBuffer packets sent by server

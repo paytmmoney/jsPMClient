@@ -1,4 +1,4 @@
-const LivePriceWebSocket = require("../LivePriceWebSocket.js");
+const LivePriceWebSocket = require("../livePriceWebSocket.js");
 let livePriceWebSocket = new LivePriceWebSocket();
 jwt = "your_public_access_token"
 
@@ -30,7 +30,7 @@ livePriceWebSocket.setOnMessageListener((arr) => {
 })
 
 // this event gets triggered when error occurs
-livePriceWebSocket.setOnErrorListener((err) => {
+livePriceWebSocket.setOnErrorListener((err) => { 
     console.log(err)
 })
 
