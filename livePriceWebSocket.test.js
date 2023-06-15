@@ -35,6 +35,10 @@ describe("LivePriceWebSocket", () => {
         livePriceWebSocket.setOnErrorListener(null)
     });
 
+    test("setReconnectConfigTest", () => {
+        livePriceWebSocket.setReconnectConfig(null, null)
+    });
+
     test("connectTest", () => {
         livePriceWebSocket.connect("jwt")
     });

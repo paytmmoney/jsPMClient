@@ -391,6 +391,10 @@ describe("PMClient", () => {
         const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue('custom value');
         const order = connect.order_book()
     });
+    test("orders_connection_test",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue('custom value');
+        const order = connect.orders()
+    });
     test("trade_details_connection_test",  () => {
         const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue('custom value');
         const order = connect.trade_details(
