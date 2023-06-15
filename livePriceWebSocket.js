@@ -59,12 +59,12 @@ const epochConverterUtil = require('./epochConverterUtil');
 
         this.socket = new WebSocket(this.url);
 
-        this.socket.on('open', () => {
+        this.socket.onopen = function() {
             console.log("connection made with server")
             this.onOpenListener();
-        })
+        };
 
-        this.socket.on('close', (code, reason) => {
+        this.socket.onclose = function(code, reason) {
             this.onCloseListener(code, reason);
             /**
              *  if reconnect feature is opted, closure code is not normal closure and onError is not triggered, we reconnect
@@ -74,7 +74,7 @@ const epochConverterUtil = require('./epochConverterUtil');
                 this.reconnect();
             }
             this.errorCode = null;
-        })
+        };
 
         this.socket.onmessage = function(packet) {
             if(typeof packet.data === "string")
@@ -83,7 +83,7 @@ const epochConverterUtil = require('./epochConverterUtil');
                 this.onMessageListener(this.parseBinary(packet)) // to handle ByteBuffer packets sent by server
         };
 
-        this.socket.on('error', (err) => {
+        this.socket.onerror = function(err) {
             this.onErrorListener(err)
             // to find the error code from error message
             const match = err.message.match(/(\d+)/);
@@ -92,7 +92,7 @@ const epochConverterUtil = require('./epochConverterUtil');
             if(this.doReconnect && ((this.errorCode && this.errorCode >= 500 && this.errorCode < 600) || err.message.includes('ECONNREFUSED'))) {
                 this.reconnect();
             }
-        })
+        };
     }
     
     /**
