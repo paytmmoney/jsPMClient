@@ -137,7 +137,7 @@ const epochConverterUtil = require('./epochConverterUtil');
      * This method is used to close websocket connection with the server.
      */
     disconnect() {
-        if (this.socket && this.socket.readyState != ws.CLOSING && this.socket.readyState != ws.CLOSED) {
+        if (this.socket && this.socket.readyState != this.socket.CLOSING && this.socket.readyState != this.socket.CLOSED) {
             this.socket.close();
         }
     }

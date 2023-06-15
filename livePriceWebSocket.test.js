@@ -178,4 +178,16 @@ describe("LivePriceWebSocket", () => {
     test("onOpenTest", () => {
         livePriceWebSocket.connect
     })
+
+    test("reconnectTest", () => {
+        livePriceWebSocket.reconnect()
+    });
+
+    test("disconnectTest", () => {
+        livePriceWebSocket.disconnect()
+    });
+
+    test("delayTest", () => {
+        livePriceWebSocket.delay(1)
+    })
 });
