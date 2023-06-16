@@ -68,7 +68,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      */
     this.get_login_URL = function (state_key) {
         if (state_key != null || undefined){
-            return endpoints['login'] + api_key + endpoints['login_param'] + state_key;
+            return endpoints.login + api_key + endpoints.login_param + state_key;
         } else {
             throw Error("state_key cannot be null");
         }
@@ -84,7 +84,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'api_secret_key':this.api_secret,
             'request_token':request_token
         }
-        var token = await apiservice.apiCall('access_token', 'POST', request_body, null, null)
+        var token = await apiservice.apiCall(endpoints.access_token[0],endpoints.access_token[1], 'POST',request_body, null, null)
 
         const res = JSON.parse(token);
 
@@ -100,14 +100,14 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * Logout the session
      */
     this.logout = function() {
-        return apiservice.apiCall('logout','DELETE',null,null,null)
+        return apiservice.apiCall(endpoints.logout[0],endpoints.logout[1],'DELETE',null,null,null)
     }
 
     /**
      * Fetch User Details
      */
     this.get_user_details = function() {
-        return apiservice.apiCall('user_details','GET',null,null,null)
+        return apiservice.apiCall(endpoints.user_details[0],endpoints.user_details[1],'GET',null,null,null)
     }
 
     // Orders
@@ -142,7 +142,8 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'price' : price, 
             'off_mkt_flag': off_mkt_flag
         }
-        var helper = 'place_regular';
+        var api = endpoints.place_regular[0];
+        var tokens = endpoints.place_regular[1];
 
         //For placing stop loss order or stop loss market order
         if (order_type == "SLM" || order_type == "SL"){
@@ -151,7 +152,8 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
 
         //For Bracket Order
         if(product == 'B') {
-            helper = 'place_bracket';
+            api = endpoints.place_bracket[0];
+            tokens = endpoints.place_bracket[1];
             delete order.off_mkt_flag;
             order['profit_value'] = profit_value;
             order['stoploss_value'] = stoploss_value;
@@ -159,11 +161,12 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
 
         // For Cover Order
         if(product == 'V'){
-            helper = 'place_cover';
+            api = endpoints.place_cover[0];
+            tokens = endpoints.place_cover[1];
             delete order.off_mkt_flag;
             order['trigger_price'] = trigger_price;
         }
-        return apiservice.apiCall(helper, 'POST', order, null, null);
+        return apiservice.apiCall(api,tokens,'POST', order, null, null);
     }
 
     /**
@@ -206,7 +209,8 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'group_id': group_id
         }
 
-        var helper = 'modify_regular'
+        var api = endpoints.modify_regular[0];
+        var tokens = endpoints.modify_regular[1];
 
         //For modifying stop loss order or stop loss market order
         if (order_type == "SLM" || order_type == "SL"){
@@ -215,17 +219,19 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
 
         // For Bracket Order
         if(product == 'B'){
-            helper = 'modify_bracket';
+            api = endpoints.modify_bracket[0];
+            tokens = endpoints.modify_bracket[1];
             order['leg_no'] = leg_no;
             order['algo_order_no'] = algo_order_no;
         }
 
         // For Cover Order
         if(product == 'V'){
-            helper = 'modify_cover';
+            api = endpoints.modify_cover[0];
+            tokens = endpoints.modify_cover[1];
             order['leg_no'] = leg_no;
         }
-        return apiservice.apiCall(helper,'POST',order,null, null);
+        return apiservice.apiCall(api,tokens,'POST',order,null, null);
     }
 
     /**
@@ -268,7 +274,8 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'serial_no': serial_no,
             'group_id': group_id
         }
-        var helper = 'cancel_regular';
+        var api = endpoints.cancel_regular[0];
+        var tokens = endpoints.cancel_regular[1];
 
         //For canceling stop loss order or stop loss market order
         if (order_type == "SLM" || order_type == "SL"){
@@ -277,17 +284,19 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
 
         // For Bracket Order
         if(product == 'B'){
-            helper = 'exit_bracket';
+            api = endpoints.exit_bracket[0];
+            tokens = endpoints.exit_bracket[1];
             order['leg_no'] = leg_no;
             order['algo_order_no'] = algo_order_no;
         }
 
         // For Cover Order
         if(product == 'V'){
-            helper = 'exit_cover';
+            api = endpoints.exit_cover[0];
+            tokens = endpoints.exit_cover[1];
             order['leg_no'] = leg_no;
         }
-        return apiservice.apiCall(helper,'POST',order,null,null)
+        return apiservice.apiCall(api,tokens,'POST',order,null,null)
     }
 
     /**
@@ -315,7 +324,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'quantity':quantity,
             'security_id':security_id
         }
-        return apiservice.apiCall('convert_regular','POST',order,null,null)
+        return apiservice.apiCall(endpoints.convert_regular[0],endpoints.convert_regular[1],'POST',order,null,null)
     }
 
     // Order & Trade Book
@@ -323,14 +332,14 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * Order Book
      */
     this.order_book = function(){
-        return apiservice.apiCall('order_book', 'GET', null, null,null)
+        return apiservice.apiCall(endpoints.order_book[0],endpoints.order_book[1],'GET', null, null,null)
     }
 
     /**
      * All Orders
      */
     this.orders = function(){
-        return apiservice.apiCall('orders', 'GET', null, null,null)
+        return apiservice.apiCall(endpoints.orders[0],endpoints.orders[1],'GET', null, null,null)
     }
 
     /**
@@ -345,14 +354,14 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'leg_no':leg_no,
             'segment':segment
         }
-        return apiservice.apiCall('trade_details', 'GET', null, params,null)
+        return apiservice.apiCall(endpoints.trade_details[0],endpoints.trade_details[1],'GET', null, params,null)
     }
 
     /**
      * Positions
      */
     this.position = function(){
-        return apiservice.apiCall('position','GET', null, null,null)
+        return apiservice.apiCall(endpoints.position[0],endpoints.position[1],'GET', null, null,null)
     }
 
     /**
@@ -367,7 +376,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'product':product,
             'exchange':exchange
         }
-        return apiservice.apiCall('position_details', 'GET', null, params, null)
+        return apiservice.apiCall(endpoints.position_details[0],endpoints.position_details[1],'GET', null, params, null)
     }
 
     /**
@@ -378,21 +387,21 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var params = {
             'config' : config
         }
-        return apiservice.apiCall('funds_summary','GET',null,params,null)
+        return apiservice.apiCall(endpoints.funds_summary[0],endpoints.funds_summary[1],'GET',null,params,null)
     }
 
     /**
      * Holdings Value
      */
     this.holdings_value = function(){
-        return apiservice.apiCall('holdings_value','GET',null,null,null)
+        return apiservice.apiCall(endpoints.holdings_value[0],endpoints.holdings_value[1],'GET',null,null,null)
     }
 
     /**
      * User Holdings Data
      */
     this.user_holdings_data = function(){
-        return apiservice.apiCall('user_holdings_data','GET',null,null,null)
+        return apiservice.apiCall(endpoints.user_holdings_data[0],endpoints.user_holdings_data[1],'GET',null,null,null)
     }
 
     // Margins
@@ -420,7 +429,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'product':product,
             'trigger_price':trigger_price
         }
-        return apiservice.apiCall('order_margin','GET',null,params,null)
+        return apiservice.apiCall(endpoints.order_margin[0],endpoints.order_margin[1],'GET',null,params,null)
     }
 
     /**
@@ -437,7 +446,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'source':source,
             'margin_list':margin_list
         }
-        return apiservice.apiCall('scrips_margin','POST',order,null,null)
+        return apiservice.apiCall(endpoints.scrips_margin[0],endpoints.scrips_margin[1],'POST',order,null,null)
     }
 
     /**
@@ -452,14 +461,14 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var path_params = {
             'file_name' : file_name
         }
-        return apiservice.apiCall('security_master','GET',null,null,path_params)
+        return apiservice.apiCall(endpoints.security_master[0],endpoints.security_master[1],'GET',null,null,path_params)
     }
 
     /**
      * Generate TPIN for CDSL
      */
     this.generate_tpin = function(){
-        return apiservice.apiCall('generate_tpin','GET',null,null,null)
+        return apiservice.apiCall(endpoints.generate_tpin[0],endpoints.generate_tpin[1],'GET',null,null,null)
     }
 
     /**
@@ -472,7 +481,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'trade_type':trade_type,
             'isin_list':isin_list
         }
-        return apiservice.apiCall('validate_tpin','POST',order,null,null)
+        return apiservice.apiCall(endpoints.validate_tpin[0],endpoints.validate_tpin[1],'POST',order,null,null)
     }
 
     /**
@@ -483,7 +492,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var params = {
             'edis_request_id':edis_request_id
         }
-        return apiservice.apiCall('status','GET',null,params,null)
+        return apiservice.apiCall(endpoints.status[0],endpoints.status[1],'GET',null,params,null)
     }
 
     // /**
@@ -518,19 +527,19 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
                 'status': status,
                 'pml-id': pml_id
             }
-            return apiservice.apiCall('gtt','GET',null,params,null)
+            return apiservice.apiCall(endpoints.gtt[0],endpoints.gtt[1],'GET',null,params,null)
         } else if ((status!=null && status!="")  && (pml_id==null || pml_id=="")) {
             var params = {
                 'status': status
             }
-            return apiservice.apiCall('gtt','GET',null,params,null)
+            return apiservice.apiCall(endpoints.gtt[0],endpoints.gtt[1],'GET',null,params,null)
         } else if ((status==null || status=="") && (pml_id!=null && pml_id!="")) {
             var params = {
                 'pml-id': pml_id
             }
-            return apiservice.apiCall('gtt','GET',null,params,null)
+            return apiservice.apiCall(endpoints.gtt[0],endpoints.gtt[1],'GET',null,params,null)
         } else {
-            return apiservice.apiCall('gtt','GET',null,null,null)
+            return apiservice.apiCall(endpoints.gtt[0],endpoints.gtt[1],'GET',null,null,null)
         }
     }
 
@@ -577,7 +586,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
-        return apiservice.apiCall('gtt','POST',order,null,null)
+        return apiservice.apiCall(endpoints.gtt[0],endpoints.gtt[1],'POST',order,null,null)
     }
 
     /**
@@ -588,7 +597,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var path_params = {
             'id' : id
         }
-        return apiservice.apiCall('gtt_by_id','GET',null,null,path_params)
+        return apiservice.apiCall(endpoints.gtt_by_id[0],endpoints.gtt_by_id[1],'GET',null,null,path_params)
     }
 
     /**
@@ -622,7 +631,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
-        return apiservice.apiCall('gtt_by_id','PUT',order,null,path_params)
+        return apiservice.apiCall(endpoints.gtt_by_id[0],endpoints.gtt_by_id[1],'PUT',order,null,path_params)
     }
 
     /**
@@ -633,14 +642,14 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var path_params = {
             'id' : id
         }
-        return apiservice.apiCall('gtt_by_id','DELETE',null,null,path_params)
+        return apiservice.apiCall(endpoints.gtt_by_id[0],endpoints.gtt_by_id[1],'DELETE',null,null,path_params)
     }
 
     /**
      * GET GTT Aggregate
      */
     this.get_gtt_aggregate = function(){
-        return apiservice.apiCall('gtt_aggregate','GET',null,null,null)
+        return apiservice.apiCall(endpoints.gtt_aggregate[0],endpoints.gtt_aggregate[1],'GET',null,null,null)
     }
 
     /**
@@ -651,7 +660,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var params = {
             'pml-id' : pml_id
         }
-        return apiservice.apiCall('expiry_gtt','GET',null,params,null)
+        return apiservice.apiCall(endpoints.expiry_gtt[0],endpoints.expiry_gtt[1],'GET',null,params,null)
     }   
 
     /**
@@ -662,7 +671,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var path_params = {
             'id' : id
         }
-        return apiservice.apiCall('gtt_by_instruction_id','GET',null,null,path_params)
+        return apiservice.apiCall(endpoints.gtt_by_instruction_id[0],endpoints.gtt_by_instruction_id[1],'GET',null,null,path_params)
     }
 
     /**
@@ -676,7 +685,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'mode_type': mode_type,
             'preferences': preferences
         }
-        response = apiservice.apiCall('live_market_data','GET',null,null,path_params).then(
+        response = apiservice.apiCall(endpoints.live_market_data[0],endpoints.live_market_data[1],'GET',null,null,path_params).then(
             function(response){
                 response = JSON.parse(response)
                 for (var tick in response['data']) {
@@ -705,7 +714,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
                 'symbol': symbol,
                 'expiry':expiry
             }
-            return apiservice.apiCall('option_chain','GET',null,null,path_params)
+            return apiservice.apiCall(endpoints.option_chain[0],endpoints.option_chain[1],'GET',null,null,path_params)
         }
 
     /**
@@ -716,7 +725,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var path_params = {
             'symbol': symbol
         }
-        return apiservice.apiCall('option_chain_config','GET',null,null,path_params)
+        return apiservice.apiCall(endpoints.option_chain_config[0],endpoints.option_chain_config[1],'GET',null,null,path_params)
     }
 }
 

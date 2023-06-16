@@ -4,10 +4,10 @@ const endpoints = require('./constants').endpoints;
 const exception = require('./exception');
 
 
-this.apiCall = function(api,http_method,payload=null,params=null,path_param=null){
+this.apiCall = function(api,tokens,http_method,payload=null,params=null,path_param=null){
     var request_body = JSON.stringify(payload);               //converts the arguments to JSON form
     var query_param = querystring.stringify(params);          //converts the arguments to query_param
-    var url = endpoints['host']+endpoints[api][0];
+    var url = endpoints.host+api;
     if (path_param != null) {
         for(var key in path_param) {
             url = url.replace("{"+key+"}", path_param[key])
@@ -27,9 +27,10 @@ this.apiCall = function(api,http_method,payload=null,params=null,path_param=null
     if (payload == null){
         delete options["body"];
     }
-    options['headers']['x-jwt-token'] = validate_token(api,this.access_token,this.public_access_token,this.read_access_token);
-    function validate_token(api,access_token,public_access_token,read_access_token){
-        var tokens = endpoints[api][1];
+
+    options['headers']['x-jwt-token'] = validate_token(tokens,this.access_token,this.public_access_token,this.read_access_token);
+
+    function validate_token(tokens,access_token,public_access_token,read_access_token){
         var jwt_token = null
         if (access_token && tokens.includes('access_token')){
             jwt_token = access_token
