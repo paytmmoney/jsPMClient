@@ -61,7 +61,7 @@ const epochConverterUtil = require('./epochConverterUtil');
 
         this.socket.on('open', () => {
             console.log("connection made with server")
-            resetReconnectCount();
+            this.resetReconnectCount();
             this.onOpenListener();
         })
 
@@ -128,7 +128,7 @@ const epochConverterUtil = require('./epochConverterUtil');
             this.connect(jwt);
         }
         if(this.reconnectCount > this.maxReconnectAttempt) {
-            resetReconnectCount();
+            this.resetReconnectCount();
         }
     }
 
