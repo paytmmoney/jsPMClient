@@ -301,6 +301,12 @@ pmClient.get_option_chain("type", "symbol", "expiry")
 pmClient.get_option_chain_config("symbol")
 ```
 
+### Get All Orders
+* Get all orders without apiKey filter
+```javascript
+pmClient.orders()
+```
+
 ## WebSocket Usage
 * To use websocket client in your project, add below code in a js file -
 ```javascript
