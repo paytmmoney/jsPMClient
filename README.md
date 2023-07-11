@@ -307,6 +307,12 @@ pmClient.get_option_chain_config("symbol")
 pmClient.orders()
 ```
 
+### Brokerage, Statutory & Regulatory Levies
+* Get Charges Info
+```javascript
+pmClient.charges_info("brokerageProfileCode", "transactionType", "instrumentType", "productType", "exchange", qty, price)
+```
+
 ## WebSocket Usage
 * To use websocket client in your project, add below code in a js file -
 ```javascript
