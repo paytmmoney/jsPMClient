@@ -727,6 +727,31 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         }
         return apiservice.apiCall(endpoints.option_chain_config[0],endpoints.option_chain_config[1],'GET',null,null,path_params)
     }
+
+    /**
+     * Brokrage Charges Info
+     * @param {String} brokerage_profile_code
+     * @param {String} transaction_type
+     * @param {String} product_type
+     * @param {String} instrument_type
+     * @param {String} exchange
+     * @param {Integer} qty
+     * @param {Integer} price
+    */
+    this.charges_info = function(brokerage_profile_code,transaction_type,product_type,instrument_type,exchange,qty,price){
+
+        var charges_info = {
+            "brokerage_profile_code": brokerage_profile_code,
+            "transaction_type": transaction_type, 
+            "product_type": product_type,
+            "instrument_type": instrument_type,
+            "exchange": exchange,
+            "qty": qty,
+            "price": price
+        }
+
+        return apiservice.apiCall(endpoints.charges_info[0],endpoints.charges_info[1],'POST',charges_info,null,null)
+    }
 }
 
 //exporting PMClient
