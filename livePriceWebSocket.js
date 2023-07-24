@@ -19,6 +19,16 @@ const epochConverterUtil = require('./epochConverterUtil');
 
     onErrorListener; // listens to error event
 
+    doReconnect = false; // boolean value determining whether reconnect feature is enabled or not.
+
+    maxReconnectAttempt = 5; // the no. of retries made to server to create connection
+
+    reconnectCount = 0; // counts the no. of times retry is called
+
+    reconnectDelay = 2000; // initial reconnect delay of 2 sec
+
+    errorCode = null; // status code of error thrown
+
     setOnOpenListener(onOpenListener) {
         this.onOpenListener = onOpenListener
     }
@@ -35,6 +45,11 @@ const epochConverterUtil = require('./epochConverterUtil');
         this.onErrorListener = onErrorListener
     }
 
+    setReconnectConfig(doReconnect, maxReconectAttempt) {
+        this.doReconnect = doReconnect;
+        this.maxReconectAttempt = maxReconectAttempt;
+    }
+
     /**
      * This method creates a websocket connection with broadcast server 
      * @param {String} jwt Public Access Token
@@ -46,15 +61,24 @@ const epochConverterUtil = require('./epochConverterUtil');
 
         this.socket.on('open', () => {
             console.log("connection made with server")
+            this.resetReconnectCount();
             this.onOpenListener();
         })
 
         this.socket.on('close', (code, reason) => {
             this.onCloseListener(code, reason);
+            /**
+             *  if reconnect feature is opted, closure code is not normal closure and onError is not triggered, we reconnect
+             * errorCode = null suggests that onError has not been triggered thus, recconect method has not already been called 
+             */
+            if(this.doReconnect && code != 1000 && this.errorCode == null) {
+                this.reconnect();
+            }
+            this.errorCode = null;
         })
 
-        this.socket.on('message', (packet) => {
-            if(typeof packet === "string")
+        this.socket.on('message' ,(packet) => {
+            if(typeof packet === "string") 
                 this.onErrorListener(packet); // to handle error message sent by server
             else
                 this.onMessageListener(this.parseBinary(packet)) // to handle ByteBuffer packets sent by server
@@ -62,6 +86,13 @@ const epochConverterUtil = require('./epochConverterUtil');
 
         this.socket.on('error', (err) => {
             this.onErrorListener(err)
+            // to find the error code from error message
+            const match = err.message.match(/(\d+)/);
+            this.errorCode = match ? parseInt(match[1]) : null;
+            // if reconnect feature is opted and either statusCode of error is 5xx or connection refused error is encountered, we reconnect.
+            if(this.doReconnect && ((this.errorCode && this.errorCode >= 500 && this.errorCode < 600) || err.message.includes('ECONNREFUSED'))) {
+                this.reconnect();
+            }
         })
     }
     
@@ -76,6 +107,43 @@ const epochConverterUtil = require('./epochConverterUtil');
         }
         this.socket.send(JSON.stringify(pref));
         console.log("preferences sent")
+    }
+    
+    /**
+     * This method acts a sleep method for current flow execution. In the meantime, any other flow can get executed
+     * @param {Number} timeout - number of milliseconds
+     */
+    delay(timeout) {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    /**
+     * This method tries to reconnect to server for maxReconnectAttempt times.
+     */
+    async reconnect() {
+        await this.delay(this.reconnectDelay);
+        this.reconnectDelay *= 2;
+        this.reconnectCount += 1;
+        if (this.reconnectCount <= this.maxReconnectAttempt) {
+            this.connect(jwt);
+        }
+        if(this.reconnectCount > this.maxReconnectAttempt) {
+            this.resetReconnectCount();
+        }
+    }
+
+    resetReconnectCount() {
+        this.reconnectCount = 0;
+        this.reconnectDelay = 2000;
+    }
+
+    /**
+     * This method is used to close websocket connection with the server.
+     */
+    disconnect() {
+        if (this.socket && this.socket.readyState != this.socket.CLOSING && this.socket.readyState != this.socket.CLOSED) {
+            this.socket.close();
+        }
     }
     
     /**
