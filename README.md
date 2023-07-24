@@ -1,4 +1,4 @@
-# The Paytm Money Equity 1.1.1 API NodeJS client
+# The Paytm Money Equity 1.1.2 API NodeJS client
 
 The official NodeJS client for communicating with [PaytmMoney Equity API](https://www.paytmmoney.com/stocks/).
 
@@ -301,6 +301,18 @@ pmClient.get_option_chain("type", "symbol", "expiry")
 pmClient.get_option_chain_config("symbol")
 ```
 
+### Get All Orders
+* Get all orders without apiKey filter
+```javascript
+pmClient.orders()
+```
+
+### Brokerage, Statutory & Regulatory Levies
+* Get Charges Info
+```javascript
+pmClient.charges_info("brokerage_profile_code", "transaction_type", "product_type", "instrument_type", "exchange", qty, price)
+```
+
 ## WebSocket Usage
 * To use websocket client in your project, add below code in a js file -
 ```javascript
@@ -342,8 +354,17 @@ livePriceWebSocket.setOnErrorListener((err) => {
     console.log(err)
 })
 
+/**
+ *  set this config if reconnect feature is desired
+ * Set first param as true and second param, the no. of times retry to connect to server shall be made  
+ */
+livePriceWebSocket.setReconnectConfig(true, 5);
+
 // this method is called to create a websocket connection with broadcast server
 livePriceWebSocket.connect(jwt) //pass public_access_token
+
+// To explicitly close websocket connection with server, call this method
+livePriceWebSocket.disconnect()
 
 // this method prints the response array received 
 function printArray(arr) {

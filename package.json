@@ -14,7 +14,7 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "jest": "^27.4.7"
+    "jest": "^27.5.1"
   },
   "description": "eq-openapi-sdk in nodejs",
   "repository": {

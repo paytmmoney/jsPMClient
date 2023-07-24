@@ -35,6 +35,10 @@ describe("LivePriceWebSocket", () => {
         livePriceWebSocket.setOnErrorListener(null)
     });
 
+    test("setReconnectConfigTest", () => {
+        livePriceWebSocket.setReconnectConfig(null, null)
+    });
+
     test("connectTest", () => {
         livePriceWebSocket.connect("jwt")
     });
@@ -173,5 +177,17 @@ describe("LivePriceWebSocket", () => {
 
     test("onOpenTest", () => {
         livePriceWebSocket.connect
+    })
+
+    test("reconnectTest", () => {
+        livePriceWebSocket.reconnect()
+    });
+
+    test("disconnectTest", () => {
+        livePriceWebSocket.disconnect()
+    });
+
+    test("delayTest", () => {
+        livePriceWebSocket.delay(1)
     })
 });
