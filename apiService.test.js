@@ -37,7 +37,7 @@ describe('apiCall', () => {
       });
     });
 
-    expect(() => apiService.apiCall(api_endpoint, http_method)).toThrowError(TypeError);
+    expect(() => apiService.apiCall(api_endpoint, http_method)).toThrowError(NotFoundError);
   });
 
   test("api_call_path_param", () => {
