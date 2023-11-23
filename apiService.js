@@ -18,7 +18,7 @@ this.apiCall = function(api,tokens,http_method,payload=null,params=null,path_par
     }
 
     var options = {
-        headers: {'Content-Type' : 'application/json'},
+        headers: {'Content-Type' : 'application/json', 'openapi-client-src' : 'sdk'},
         url: url,
         body: request_body,
         method: http_method

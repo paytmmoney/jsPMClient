@@ -597,7 +597,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
         var path_params = {
             'id' : id
         }
-        return apiservice.apiCall(endpoints.gtt_by_id[0],endpoints.gtt_by_id[1],'GET',null,null,path_params)
+        return apiservice.apiCall(endpoints.gtt_by_id_v2[0],endpoints.gtt_by_id_v2[1],'GET',null,null,path_params)
     }
 
     /**
@@ -631,7 +631,7 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
-        return apiservice.apiCall(endpoints.gtt_by_id[0],endpoints.gtt_by_id[1],'PUT',order,null,path_params)
+        return apiservice.apiCall(endpoints.gtt_by_id_v2[0],endpoints.gtt_by_id_v2[1],'PUT',order,null,path_params)
     }
 
     /**
