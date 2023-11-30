@@ -552,27 +552,10 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {String} product_type
      * @param {String} set_price
      * @param {String} transaction_type
-     * @param {String} order_type
      * @param {String} trigger_type
-     * @param {String} quantity
-     * @param {String} trigger_price
-     * @param {String} limit_price
-     * @param {String} execution_ref_id
-     * @param {String} notification_ref_id
-     * @param {String} sub_type
-     * @param {String} triggered_at
-     * @param {String} triggered_at_price
-     * @param {String} triggered_at_type
+     * @param {Object} transaction_details
      */
-     this.create_gtt = function(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price){
-        var transaction_details = []
-
-        var transaction_details_obj = {
-            'quantity': quantity,
-            'trigger_price': trigger_price,
-            'limit_price': limit_price
-        }
-        transaction_details.push(transaction_details_obj)
+     this.create_gtt = function(segment, exchange, pml_id=null, security_id, product_type, set_price, transaction_type, trigger_type, transaction_details){
 
         var order = {
             'segment': segment,
@@ -582,7 +565,6 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'product_type': product_type,
             'set_price': set_price,
             'transaction_type': transaction_type,
-            'order_type': order_type,
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
@@ -610,24 +592,14 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {String} trigger_price
      * @param {String} limit_price
      */
-     this.update_gtt = function(id,set_price=null, transaction_type=null, order_type=null, trigger_type=null, quantity=null, trigger_price=null, limit_price=null){
+     this.update_gtt = function(id, set_price=null, transaction_type=null, trigger_type=null, transaction_details){
         var path_params = {
             'id' : id
         }
-        
-        var transaction_details = []
-
-        var transaction_details_obj = {
-            'quantity': quantity,
-            'trigger_price': trigger_price,
-            'limit_price': limit_price
-        }
-        transaction_details.push(transaction_details_obj)
 
         var order = {
             'set_price': set_price,
             'transaction_type': transaction_type,
-            'order_type': order_type,
             'trigger_type': trigger_type,
             'transaction_details': transaction_details
         }
@@ -672,135 +644,6 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
             'id' : id
         }
         return apiservice.apiCall(endpoints.gtt_by_instruction_id[0],endpoints.gtt_by_instruction_id[1],'GET',null,null,path_params)
-    }
-
-    /**
-     * Create GTT order v2
-     * @param {String} segment
-     * @param {String} exchange
-     * @param {String} pml_id
-     * @param {String} security_id
-     * @param {String} product_type
-     * @param {String} set_price
-     * @param {String} transaction_type
-     * @param {String} order_type
-     * @param {String} trigger_type
-     * @param {String} quantity
-     * @param {String} trigger_price
-     * @param {String} limit_price
-     * @param {String} execution_ref_id
-     * @param {String} notification_ref_id
-     * @param {String} sub_type
-     * @param {String} triggered_at
-     * @param {String} triggered_at_price
-     * @param {String} triggered_at_type
-     */
-    this.create_gtt_v2 = function(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price){
-        var transaction_details = []
-
-        var transaction_details_obj = {
-            'quantity': quantity,
-            'trigger_price': trigger_price,
-            'limit_price': limit_price
-        }
-        transaction_details.push(transaction_details_obj)
-
-        var order = {
-            'segment': segment,
-            'exchange': exchange,
-            'pml-id': pml_id,
-            'security_id': security_id,
-            'product_type': product_type,
-            'set_price': set_price,
-            'transaction_type': transaction_type,
-            'order_type': order_type,
-            'trigger_type': trigger_type,
-            'transaction_details': transaction_details
-        }
-        return apiservice.apiCall(endpoints.gtt_v2[0],endpoints.gtt_v2[1],'POST',order,null,null)
-    }
-
-    /**
-     * Get GTT 
-     * @param {String} id
-     */
-    this.get_gtt_v2 = function(id){
-        var path_params = {
-            'id' : id
-        }
-        return apiservice.apiCall(endpoints.gtt_by_id_v2[0],endpoints.gtt_by_id_v2[1],'GET',null,null,path_params)
-    }
-
-    /**
-     * Update GTT order
-     * @param {String} set_price
-     * @param {String} transaction_type
-     * @param {String} order_type
-     * @param {String} trigger_type
-     * @param {String} quantity
-     * @param {String} trigger_price
-     * @param {String} limit_price
-     */
-    this.update_gtt_v2 = function(id,set_price=null, transaction_type=null, order_type=null, trigger_type=null, quantity=null, trigger_price=null, limit_price=null){
-        var path_params = {
-            'id' : id
-        }
-        
-        var transaction_details = []
-
-        var transaction_details_obj = {
-            'quantity': quantity,
-            'trigger_price': trigger_price,
-            'limit_price': limit_price
-        }
-        transaction_details.push(transaction_details_obj)
-
-        var order = {
-            'set_price': set_price,
-            'transaction_type': transaction_type,
-            'order_type': order_type,
-            'trigger_type': trigger_type,
-            'transaction_details': transaction_details
-        }
-        return apiservice.apiCall(endpoints.gtt_by_id_v2[0],endpoints.gtt_by_id_v2[1],'PUT',order,null,path_params)
-    }
-
-    /**
-     * Get GTT order by Instruction id
-     * @param {String} id
-     */
-    this.get_gtt_by_instruction_id_v2 = function(id){
-        var path_params = {
-            'id' : id
-        }
-        return apiservice.apiCall(endpoints.gtt_by_instruction_id_v2[0],endpoints.gtt_by_instruction_id_v2[1],'GET',null,null,path_params)
-    }
-
-    /**
-     * Get GTT by status or pml_id
-     * @param {String} status
-     * @param {String} pml_id
-     */
-    this.get_gtt_by_status_or_pml_id_v2 = function(status=null,pml_id=null){
-        if (status!=null && status!="" && pml_id!=null && pml_id!=""){
-            var params = {
-                'status': status,
-                'pml-id': pml_id
-            }
-            return apiservice.apiCall(endpoints.gtt_v2[0],endpoints.gtt_v2[1],'GET',null,params,null)
-        } else if ((status!=null && status!="")  && (pml_id==null || pml_id=="")) {
-            var params = {
-                'status': status
-            }
-            return apiservice.apiCall(endpoints.gtt_v2[0],endpoints.gtt_v2[1],'GET',null,params,null)
-        } else if ((status==null || status=="") && (pml_id!=null && pml_id!="")) {
-            var params = {
-                'pml-id': pml_id
-            }
-            return apiservice.apiCall(endpoints.gtt_v2[0],endpoints.gtt_v2[1],'GET',null,params,null)
-        } else {
-            return apiservice.apiCall(endpoints.gtt_v2[0],endpoints.gtt_v2[1],'GET',null,null,null)
-        }
     }
 
     /**
