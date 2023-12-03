@@ -237,15 +237,63 @@ pm.logout();
 
 ### Create GTT
 * To create a GTT order.
+```javascript
+pm.create_gtt(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price);
+```
+
+### Get All GTT
+* To get all GTT or get by pml_id or status.
+```javascript
+pm.get_gtt_by_status_or_pml_id(status, pml_id);
+```
+
+### Get GTT
+* To get GTT by Id.
+```javascript
+pm.get_gtt(id);
+```
+
+### Update GTT
+* To update GTT by Id.
+```javascript
+pm.update_gtt(id, set_price, transaction_type, order_type, trigger_type, quantity, trigger_price, limit_price);
+```
+
+### Delete GTT
+* To Delete GTT by Id.
+```javascript
+pm.delete_gtt(id);
+```
+
+### Get Expiry
+* To get expiry of the GTT.
+```javascript
+pm.get_gtt_expiry(pml_id);
+```
+
+### Get Aggregate
+* To get the aggregate of the GTTs.
+```javascript
+pm.get_gtt_aggregate();
+```
+
+### Get GTT InstructionId
+* To GTT by InstructionId.
+```javascript
+pm.get_gtt_by_instruction_id(id);
+```
+
+### Create GTT V2
+* To create a GTT order.
 * Note 1 : pml_id in can be null.
 * Note 2 : transaction_details is a list of objects(key-value pair).
 * Refer below sample requestBody 
 ```javascript
-pm.create_gtt(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, trigger_type, transaction_details);
+pm.create_gtt_v2(segment, exchange, pml_id, security_id, product_type, set_price, transaction_type, trigger_type, transaction_details);
 ```
 ```javascript
 // Sample requestBody for SINGLE trigger_type
-pm.create_gtt(
+pm.create_gtt_v2(
     segment = "E",
     exchange = "BSE",
     pml_id = "1000002445", // not required
@@ -266,7 +314,7 @@ pm.create_gtt(
 ```
 ```javascript
 // Sample requestBody for OCO trigger_type
-pm.create_gtt(
+pm.create_gtt_v2(
     segment = "E",
     exchange = "BSE",
     pml_id = "1000002445",
@@ -294,27 +342,27 @@ pm.create_gtt(
 )
 ```
 
-### Get All GTT
+### Get All GTT V2
 * To get all GTT or get by pml_id or status.
 ```javascript
-pm.get_gtt_by_status_or_pml_id(status, pml_id);
+pm.get_gtt_by_status_or_pml_id_v2(status, pml_id);
 ```
 
-### Get GTT
+### Get GTT V2
 * To get GTT by Id.
 ```javascript
-pm.get_gtt(id);
+pm.get_gtt_v2(id);
 ```
 
-### Update GTT
+### Update GTT V2
 * To update GTT by Id.
 * Note : transaction_details is a list of objects(key-value pair).
 * Refer below sample requestBody 
 ```javascript
-pm.update_gtt(id, set_price, transaction_type, trigger_type, transaction_details);
+pm.update_gtt_v2(id, set_price, transaction_type, trigger_type, transaction_details);
 ```
 ```javascript
-pm.update_gtt(
+pm.update_gtt_v2(
     id=217,
     set_price = "8.40",
     transaction_type = "S",
@@ -340,28 +388,10 @@ pm.update_gtt(
 )
 ```
 
-### Delete GTT
-* To Delete GTT by Id.
-```javascript
-pm.delete_gtt(id);
-```
-
-### Get Expiry
-* To get expiry of the GTT.
-```javascript
-pm.get_gtt_expiry(pml_id);
-```
-
-### Get Aggregate
-* To get the aggregate of the GTTs.
-```javascript
-pm.get_gtt_aggregate();
-```
-
-### Get GTT InstructionId
+### Get GTT InstructionId V2
 * To GTT by InstructionId.
 ```javascript
-pm.get_gtt_by_instruction_id(id);
+pm.get_gtt_by_instruction_id_v2(id);
 ```
 
 ### Get Live Price via API
