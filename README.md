@@ -1,4 +1,4 @@
-# The Paytm Money Equity 1.1.2 API NodeJS client
+# The Paytm Money Equity 1.1.3 API NodeJS client
 
 The official NodeJS client for communicating with [PaytmMoney Equity API](https://www.paytmmoney.com/stocks/).
 
