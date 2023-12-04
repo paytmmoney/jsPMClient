@@ -713,12 +713,11 @@ var PMClient  = function(api_key, api_secret, access_token=null, public_access_t
      * @param {String} trigger_type
      * @param {Object} transaction_details
      */
-    this.create_gtt_v2 = function(segment, exchange, pml_id=null, security_id, product_type, set_price, transaction_type, trigger_type, transaction_details){
+    this.create_gtt_v2 = function(segment, exchange, security_id, product_type, set_price, transaction_type, trigger_type, transaction_details){
 
         var order = {
             'segment': segment,
             'exchange': exchange,
-            'pml-id': pml_id,
             'security_id': security_id,
             'product_type': product_type,
             'set_price': set_price,
