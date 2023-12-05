@@ -661,6 +661,82 @@ describe("PMClient", () => {
         const order = connect.get_gtt_by_instruction_id(id=2563)
         
     });
+    test("create_gtt_v2_connection_test", () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.create_gtt_v2(        
+            segment="E",
+            exchange="NSE",
+            security_id="14366",
+            product_type="C",
+            set_price=12.80,
+            transaction_type="S",
+            trigger_type="SINGLE",
+            transaction_details="transaction_details")
+    });
+    test("create_gtt_v2_attribute_test", () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.create_gtt_v2(        
+            segment="E",
+            exchange="NSE",
+            security_id="14366",
+            product_type=6,
+            set_price=12.80,
+            transaction_type="S",
+            trigger_type="SINGLE",
+            transaction_details="transaction_details")
+    });
+    test("get_gtt_by_id_or_status_v2_connection_test",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.get_gtt_by_status_or_pml_id_v2()
+    });
+    test("get_gtt_by_id_or_status_v2_connection_test1",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.get_gtt_by_status_or_pml_id_v2(
+            status="ACTVE",
+            pml_id="111111111111111"
+        )
+    });
+    test("get_gtt_by_id_or_status_v2_connection_test2",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.get_gtt_by_status_or_pml_id_v2(
+            null,
+            pml_id="1111111111111118"
+        )
+    });
+    test("get_gtt_by_id_or_status_v2_connection_test3",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.get_gtt_by_status_or_pml_id_v2(
+            status="ACTVE",
+            null
+        )
+    });
+    test("get_gtt_v2_connection_test",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.get_gtt_v2(id=2563)
+    });
+    test("update_gtt_v2_attribute_test", () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.update_gtt_v2(    
+            id=89,    
+            set_price=12.80,
+            transaction_type=5,
+            trigger_type="SINGLE",
+            transaction_details="transaction_details")
+    });
+    test("update_gtt_v2_connection_test", () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.update_gtt_v2(   
+            id=89,   
+            set_price=12.80,
+            transaction_type="S",
+            trigger_type="SINGLE",
+            transaction_details="transaction_details")
+    });
+    test("get_gtt_by_instruction_id_v2_connection_test",  () => {
+        const myMethodMock = jest.spyOn(apiService, 'apiCall').mockReturnValue("response");
+        const order = connect.get_gtt_by_instruction_id_v2(id=2563)
+        
+    });
 
     // test("get_live_market_data_connection_test",  () => {
     //     response = {
