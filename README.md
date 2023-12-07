@@ -1,4 +1,4 @@
-# The Paytm Money Equity 1.1.2 API NodeJS client
+# The Paytm Money Equity 1.1.3 API NodeJS client
 
 The official NodeJS client for communicating with [PaytmMoney Equity API](https://www.paytmmoney.com/stocks/).
 
@@ -281,6 +281,114 @@ pm.get_gtt_aggregate();
 * To GTT by InstructionId.
 ```javascript
 pm.get_gtt_by_instruction_id(id);
+```
+
+### Create GTT V2
+* To create a GTT order.
+* Note : transaction_details is a list of objects(key-value pair).
+* Refer below sample requestBody 
+```javascript
+pm.create_gtt_v2(segment, exchange, security_id, product_type, set_price, transaction_type, trigger_type, transaction_details);
+```
+```javascript
+// Sample requestBody for SINGLE trigger_type
+pm.create_gtt_v2(
+    segment = "E",
+    exchange = "BSE",
+    security_id = 500570,
+    product_type = "C",
+    set_price = "709.35",
+    transaction_type = "B",
+    trigger_type = "SINGLE",
+    transaction_details = [
+        {
+            "trigger_price": "702.25",
+            "order_type": "MKT",
+            "limit_price": 0,
+            "quantity": 1
+        }
+    ]
+)
+```
+```javascript
+// Sample requestBody for OCO trigger_type
+pm.create_gtt_v2(
+    segment = "E",
+    exchange = "BSE",
+    security_id = 500570,
+    product_type = "C",
+    set_price = "702.65",
+    transaction_type = "S",
+    trigger_type = "OCO",
+    transaction_details = [
+        {
+            "sub_type": "STOPLOSS",
+            "trigger_price": "695.60",
+            "order_type": "MKT",
+            "limit_price": 0,
+            "quantity": 1
+        },
+        {
+            "sub_type": "TARGET",
+            "trigger_price": "709.70",
+            "order_type": "MKT",
+            "limit_price": 0,
+            "quantity": 1
+        }
+    ]
+)
+```
+
+### Get All GTT V2
+* To get all GTT or get by pml_id or status.
+```javascript
+pm.get_gtt_by_status_or_pml_id_v2(status, pml_id);
+```
+
+### Get GTT V2
+* To get GTT by Id.
+```javascript
+pm.get_gtt_v2(id);
+```
+
+### Update GTT V2
+* To update GTT by Id.
+* Note : transaction_details is a list of objects(key-value pair).
+* Refer below sample requestBody 
+```javascript
+pm.update_gtt_v2(id, set_price, transaction_type, trigger_type, transaction_details);
+```
+```javascript
+pm.update_gtt_v2(
+    id=217,
+    set_price = "8.40",
+    transaction_type = "S",
+    trigger_type = "OCO",
+    transaction_details = [
+        {
+            "id": 218,               //For OCO only
+            "sub_type": "STOPLOSS",  //For OCO only
+            "quantity": "2",
+            "trigger_price": "9.0",
+            "limit_price": "15.0",
+            "order_type": "LMT"    
+        },
+        {
+            "id": 219,                //For OCO only
+            "sub_type": "TARGET",   //For OCO only
+            "quantity": "2",
+            "trigger_price": "15.0",
+            "limit_price": "20",
+            "order_type": "LMT"   
+        }
+    ]
+)
+```
+
+### Get GTT InstructionId V2
+* To GTT by InstructionId.
+```javascript
+pm.get_gtt_by_instruction_id_v2(id);
 ```
 
 ### Get Live Price via API
