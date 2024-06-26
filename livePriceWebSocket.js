@@ -290,7 +290,7 @@ const epochConverterUtil = require('./epochConverterUtil');
                 tick.fifty_two_week_high = dvu.getFloat32(position + 58, true).toFixed(2),
                 tick.fifty_two_week_low = dvu.getFloat32(position + 62, true).toFixed(2),
                 tick.OI = dvu.getUint32(position + 66, true),
-                tick.OI_change = dvu.getUint32(position + 70, true)
+                tick.OI_change = dvu.getInt32(position + 70, true)
 
                 response.push(tick);
 
