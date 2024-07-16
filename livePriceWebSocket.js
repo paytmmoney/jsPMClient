@@ -220,7 +220,7 @@ const epochConverterUtil = require('./epochConverterUtil');
                     mode: dvu.getInt8(position + 13, true),
                     last_traded_quantity: dvu.getInt32(position + 14, true),
                     average_traded_price: dvu.getFloat32(position + 18, true).toFixed(2),
-                    volume_traded: dvu.getInt32(position + 22, true),
+                    volume_traded: dvu.getUint32(position + 22, true),
                     total_buy_quantity: dvu.getInt32(position + 26, true),
                     total_sell_quantity: dvu.getInt32(position + 30, true),
                     open: dvu.getFloat32(position + 34, true).toFixed(2), 
@@ -278,7 +278,7 @@ const epochConverterUtil = require('./epochConverterUtil');
                 tick.mode = dvu.getInt8(position + 13, true), 
                 tick.last_traded_quantity = dvu.getInt32(position + 14, true),  
                 tick.average_traded_price = dvu.getFloat32(position + 18, true).toFixed(2),
-                tick.volume_traded = dvu.getInt32(position + 22, true), 
+                tick.volume_traded = dvu.getUint32(position + 22, true), 
                 tick.total_buy_quantity = dvu.getInt32(position + 26, true), 
                 tick.total_sell_quantity = dvu.getInt32(position + 30, true),
                 tick.open = dvu.getFloat32(position + 34, true).toFixed(2),
@@ -289,7 +289,7 @@ const epochConverterUtil = require('./epochConverterUtil');
                 tick.change_absolute = dvu.getFloat32(position + 54, true).toFixed(2),
                 tick.fifty_two_week_high = dvu.getFloat32(position + 58, true).toFixed(2),
                 tick.fifty_two_week_low = dvu.getFloat32(position + 62, true).toFixed(2),
-                tick.OI = dvu.getInt32(position + 66, true),
+                tick.OI = dvu.getUint32(position + 66, true),
                 tick.OI_change = dvu.getInt32(position + 70, true)
 
                 response.push(tick);
